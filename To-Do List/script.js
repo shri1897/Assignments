@@ -10,7 +10,7 @@ TODO_LIST.init = function () {
         textBox = document.getElementById("text-box"); //Used for creating new list element.
 
     textBox.addEventListener("keypress", function textBoxOnEnterKeyPressed(event) {
-        if (event.keyCode === 13) { //If enter is pressed
+        if (event.keyCode === 13) { //Add item If enter key pressed
             addItem();
         }
     });
@@ -157,7 +157,6 @@ TODO_LIST.init = function () {
             selectedElementsArray.push(divElement);
         }
     }
-    
     reloadFromLocalStorage();
 };
 TODO_LIST.init();
