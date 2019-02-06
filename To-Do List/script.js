@@ -143,6 +143,7 @@ TODO_LIST.init = function () {
                 markAsChecked(newItem, true);
             }
         }
+        storeArraysLocally();
     }
 
     function markAsDone(divElement) { //Adds Done-class and pushes element to completed array.
@@ -156,7 +157,7 @@ TODO_LIST.init = function () {
             selectedElementsArray.push(divElement);
         }
     }
+    
     reloadFromLocalStorage();
-    storeArraysLocally();
 };
 TODO_LIST.init();
