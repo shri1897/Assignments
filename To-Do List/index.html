@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> To-Do </title>
+     <link defer rel="stylesheet" href="style.css">
+     <script defer type="text/javascript" src="script.js"></script>
+    
+</head>
+
+<body id="main-body">
+    <div id="container">
+        <div id="text-input">
+            <input type="text" id="text-box" placeholder="Write something to add">
+            <button id="btn-add" class="input-button">Add</button>
+            <button id="btn-select-all" class="input-button">Select/Deselect All</button>
+            <button id="btn-delete-selected" class="input-button">Delete Selected</button>
+            <button id="btn-delete-completed" class="input-button">Delete Completed</button>
+        </div>
+
+        <div id="list-container">
+            
+        </div>
+    </div>
+    <div class="list-item">
+            <input type="checkbox" data-name="check-box" class="check-box">
+            <p data-name="p"></p>
+            <button class="buttonClass-done" data-name ="btn-done" style="color: rgb(0, 139, 139);">Done</button>
+            <button class="buttonClass-x" data-name = "btn-x" style="color: rgb(255, 81, 81);">X</button>
+        </div>
+</body>
+
+</html>
