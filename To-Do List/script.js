@@ -41,7 +41,7 @@ TODO_LIST.init = function () {
         var i, check_uncheck;
         check_uncheck = findCheckUncheck();
         for (i = 0; i < allElementsArray.length; i += 1) {
-            markAsChecked(allElementsArray[i], check_uncheck);
+            markElementAsChecked(allElementsArray[i], check_uncheck);
         }
         storeArraysLocally();
     });
@@ -67,7 +67,7 @@ TODO_LIST.init = function () {
                 }
             case "btn-done": //On-click -> add to completedArray and change style.
                 {
-                    markAsDone(parentDivElement);
+                    markElementAsDone(parentDivElement);
                     break;
                 }
             case "btn-x": //On-click -> remove element from all the arrays
@@ -137,21 +137,21 @@ TODO_LIST.init = function () {
             done = localStorage.getItem(`done${i}`);
             newItem = addItem(textValue);
             if (done === "true") {
-                markAsDone(newItem);
+                markElementAsDone(newItem);
             }
             if (checked === "true") {
-                markAsChecked(newItem, true);
+                markElementAsChecked(newItem, true);
             }
         }
         storeArraysLocally();
     }
 
-    function markAsDone(divElement) { //Adds Done-class and pushes element to completed array.
+    function markElementAsDone(divElement) { //Adds Done-class and pushes element to completed array.
         completedElementsArray.push(divElement);
         divElement.classList.add("done-class");
     }
 
-    function markAsChecked(divElement, value) { // changes checked value to given value and pushed element to selected Array.
+    function markElementAsChecked(divElement, value) { // changes checked value to given value and pushed element to selected Array.
         divElement.querySelector(`[data-name="check-box"]`).checked = value;
         if (value) {
             selectedElementsArray.push(divElement);
