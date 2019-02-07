@@ -1,6 +1,4 @@
-var TODO_LIST = {};
-
-TODO_LIST.init = function () {
+(function toDoListInit() { 
 
     var selectedElementsArray = [],
         completedElementsArray = [],
@@ -15,7 +13,9 @@ TODO_LIST.init = function () {
         }
     });
 
-    document.getElementById('btn-add').addEventListener('click', addItem); 
+    document.getElementById('btn-add').addEventListener('click', function buttonAddOnClickListener(){
+        addItem();
+    }); 
 
     document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClick(event) { //delete all selected elements
         var i;
@@ -158,5 +158,4 @@ TODO_LIST.init = function () {
         }
     }
     reloadFromLocalStorage();
-};
-TODO_LIST.init();
+}());

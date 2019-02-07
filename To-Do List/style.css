@@ -73,5 +73,5 @@ html {
     background: aquamarine;
 }
 .done-class > p {
-    text-decoration-line: line-through;
+    text-decoration: line-through;
 }
