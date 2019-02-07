@@ -1,11 +1,62 @@
-(function toDoListInit() { 
+var TODOLIST = (function toDoListInit() {
 
-    var selectedElementsArray = [],
-        completedElementsArray = [],
-        allElementsArray = [],
+    var listOfItemObjects = [],
         listContainer = document.getElementById("list-container"), //Most reused element.
-        hiddenItem = document.querySelector(".list-item"), //Used for creating new List element.
+        templateItem = document.querySelector(".template-list-item"), //Used for creating new List element.
         textBox = document.getElementById("text-box"); //Used for creating new list element.
+
+    function ListItemConstructor(todoID, todoText) {
+        this.todoID = todoID;
+        this.todoText = todoText;
+        this.todoStatus = false;
+        this.todoChecked = false;
+    };
+
+    ListItemConstructor.prototype.setStatus = function (status) {
+        var listItemReference;
+        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
+        this.todoStatus = false;
+        if (status || status === "true") {
+            listItemReference.classList.add("done-class");
+            this.todoStatus = true;
+        }
+    };
+
+    ListItemConstructor.prototype.setText = function (text) {
+        var listItemReference;
+        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
+        listItemReference.querySelector(`[todo-type="text-holder"]`).textContent = text;
+        this.todoText = text;
+    };
+
+    ListItemConstructor.prototype.changeID = function (newID) {
+        var listItemReference;
+        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
+        listItemReference.setAttribute("todo-id", `${newID}`);
+        this.todoID = newID;
+    };
+
+    ListItemConstructor.prototype.setChecked = function (value) {
+        var listItemReference;
+        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
+        if(!value){
+            value = false;
+        }
+        listItemReference.querySelector(`[todo-type="check"]`).checked = value;
+        this.todoChecked = value;
+    };
+
+    ListItemConstructor.prototype.removeObject = function () {
+        var listItemReference;
+        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
+        listItemReference.remove();
+        listOfItemObjects.splice(this.todoID, 1);
+        for (i = 0; i < listOfItemObjects.length; i += 1) {
+            listItemReference = listContainer.querySelector(`[todo-id="${listOfItemObjects[i].todoID}"]`);
+            listItemReference.setAttribute("todo-id", `${i}`);
+            listOfItemObjects[i].todoID = i;
+        }
+    };
 
     textBox.addEventListener("keypress", function textBoxOnEnterKeyPressed(event) {
         if (event.keyCode === 13) { //Add item If enter key pressed
@@ -13,149 +64,97 @@
         }
     });
 
-    document.getElementById('btn-add').addEventListener('click', function buttonAddOnClickListener(){
+    document.getElementById('btn-add').addEventListener('click', function buttonAddOnClickListener() {
         addItem();
-    }); 
+    });
 
     document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClick(event) { //delete all selected elements
         var i;
-        for (i = 0; i < selectedElementsArray.length; i += 1) {
-            removeElementFromArray(allElementsArray, selectedElementsArray[i]);
-            selectedElementsArray[i].remove();
+        for (i = listOfItemObjects.length - 1; i >= 0; i -= 1) {
+            if (listOfItemObjects[i].todoChecked) {
+                listOfItemObjects[i].removeObject();
+            }
         }
-        selectedElementsArray = [];
-        storeArraysLocally();
+        saveToLocalStorage();
     });
 
     document.getElementById('btn-delete-completed').addEventListener('click', function deleteCompletedOnClick(event) { // Delete all completed elements
         var i;
-        for (i = 0; i < completedElementsArray.length; i += 1) {
-            removeElementFromArray(allElementsArray, completedElementsArray[i]);
-            completedElementsArray[i].remove();
+        for (i = listOfItemObjects.length - 1; i >= 0; i -= 1) {
+            if (listOfItemObjects[i].todoStatus) {
+                listOfItemObjects[i].removeObject();
+            }
         }
-        completedElementsArray = [];
-        storeArraysLocally();
+        saveToLocalStorage();
     });
 
     document.getElementById('btn-select-all').addEventListener('click', function selectAllOnClick(event) { //Select-Deselect All
-        var i, check_uncheck;
-        check_uncheck = findCheckUncheck();
-        for (i = 0; i < allElementsArray.length; i += 1) {
-            markElementAsChecked(allElementsArray[i], check_uncheck);
+        var i, check_uncheck = true;
+        if (listOfItemObjects.length > 0 && listOfItemObjects[0].todoChecked) {
+            check_uncheck = false;
         }
-        storeArraysLocally();
+        for (i = 0; i < listOfItemObjects.length; i += 1) {
+            listOfItemObjects[i].setChecked(check_uncheck);
+        }
+        saveToLocalStorage();
     });
 
     listContainer.addEventListener("click", function listContainerOnClickListener(event) { //Using Event-bubbling to find the target.
-        var index, parentDivElement;
-        parentDivElement = event.target.parentElement;
-        switch (event.target.getAttribute("data-name")) {
-
-            case "check-box": //On-click -> refresh selected Array.
+        var index, clickedListItem;
+        clickedListItem = event.target.parentElement;
+        index = clickedListItem.getAttribute("todo-id");
+        switch (event.target.getAttribute("todo-type")) {
+            case "check":
                 {
-                    index = selectedElementsArray.indexOf(parentDivElement);
-                    if (event.target.checked) {
-                        if (index === -1) {
-                            selectedElementsArray.push(parentDivElement);
-                        }
-                    } else {
-                        if (index > -1) {
-                            selectedElementsArray.splice(index, 1);
-                        }
-                    }
+                    listOfItemObjects[index].setChecked(event.target.checked);
                     break;
                 }
-            case "btn-done": //On-click -> add to completedArray and change style.
+            case "btn-done":
                 {
-                    markElementAsDone(parentDivElement);
+                    listOfItemObjects[index].setStatus(true);
                     break;
                 }
-            case "btn-x": //On-click -> remove element from all the arrays
+            case "btn-x":
                 {
-                    removeElementFromArray(allElementsArray, parentDivElement);
-                    removeElementFromArray(selectedElementsArray, parentDivElement);
-                    parentDivElement.remove();
+                    listOfItemObjects[index].removeObject();
                     break;
                 }
         }
-        storeArraysLocally();
+        saveToLocalStorage();
         event.stopPropagation();
     });
 
-    function addItem(text) { //Adding List Item using cloning and pushing Item to allElementsArray Array.
-        var newItem, textvalue;
+    function addItem(text, status, checked) { //Adding List Item using cloning and pushing Item to allElementsArray Array.
+        var newItem, textvalue, latestIndex;
         textvalue = text || textBox.value;
         textBox.value = "";
         if (textvalue) {
-            newItem = hiddenItem.cloneNode(true);
-            newItem.querySelector(`[data-name="p"]`).textContent = textvalue;
-            newItem.style.display = "flex";
-            allElementsArray.push(newItem);
+            newItem = templateItem.cloneNode(true);
+            newItem.querySelector(`[todo-type="text-holder"]`).textContent = textvalue;
+            newItem.classList.remove("template-list-item");
             listContainer.appendChild(newItem);
-            storeArraysLocally();
+
+            latestIndex = listOfItemObjects.length;
+            newItem.setAttribute("todo-id", `${latestIndex}`);
+            listOfItemObjects[latestIndex] = new ListItemConstructor(latestIndex, textvalue);
+            listOfItemObjects[latestIndex].setStatus(status);
+            listOfItemObjects[latestIndex].setChecked(checked);
         }
-        return newItem;
+        saveToLocalStorage();
     };
 
-    function removeElementFromArray(arrayName, elementToRemove) { //Removing specified element from given array.
-        var index;
-        index = arrayName.indexOf(elementToRemove);
-        if (index > -1) {
-            arrayName.splice(index, 1);
+    function saveToLocalStorage() {
+        localStorage.setItem("com.todo-list-Domain/listOfItemObjects", JSON.stringify(listOfItemObjects));
+    };
+
+    function reloadFromLocalStorage() {
+        var i, retrievedObject, temp;
+        retrievedObject = JSON.parse(localStorage.getItem("com.todo-list-Domain/listOfItemObjects"));
+        for (i = 0; i < retrievedObject.length; i += 1) {
+            temp = retrievedObject[i];
+            addItem(temp.todoText, temp.todoStatus, temp.todoChecked);
         }
     };
 
-    function findCheckUncheck() { //If any element is selected deselect all and return false. otherwise, select all and return true;
-        if (selectedElementsArray.length > 0) {
-            selectedElementsArray = [];
-            return false;
-        } else {
-            selectedElementsArray = allElementsArray.slice();
-            return true;
-        }
-    };
-
-    function storeArraysLocally() { //Storing element's text, checked and completed value in localstorage.
-        var i, text, checked, done;
-        localStorage.setItem('listItemSize', allElementsArray.length);
-        for (i = 0; i < allElementsArray.length; i += 1) {
-            text = allElementsArray[i].querySelector(`[data-name="p"]`).textContent;
-            checked = allElementsArray[i].querySelector(`[data-name="check-box"]`).checked;
-            done = completedElementsArray.indexOf(allElementsArray[i]) === -1 ? false : true;
-            localStorage.setItem(`textValue${i}`, text);
-            localStorage.setItem(`checked${i}`, checked);
-            localStorage.setItem(`done${i}`, done);
-        }
-    }
-
-    function reloadFromLocalStorage() { //Reloading elements from local storage with checked and completed value.
-        var i, listItemSize, textValue, done, checked, newItem;
-        listItemSize = parseInt(localStorage.getItem(`listItemSize`));
-        for (i = 0; i < listItemSize; i += 1) {
-            textValue = localStorage.getItem(`textValue${i}`);
-            checked = localStorage.getItem(`checked${i}`);
-            done = localStorage.getItem(`done${i}`);
-            newItem = addItem(textValue);
-            if (done === "true") {
-                markElementAsDone(newItem);
-            }
-            if (checked === "true") {
-                markElementAsChecked(newItem, true);
-            }
-        }
-        storeArraysLocally();
-    }
-
-    function markElementAsDone(divElement) { //Adds Done-class and pushes element to completed array.
-        completedElementsArray.push(divElement);
-        divElement.classList.add("done-class");
-    }
-
-    function markElementAsChecked(divElement, value) { // changes checked value to given value and pushed element to selected Array.
-        divElement.querySelector(`[data-name="check-box"]`).checked = value;
-        if (value) {
-            selectedElementsArray.push(divElement);
-        }
-    }
     reloadFromLocalStorage();
-}());
+})();

@@ -62,8 +62,11 @@ html {
     margin: 15px;
 
 }
-.list-item {
+.template-list-item {
     display: none;
+    background-color:  rgb(251, 251, 216);
+}
+.list-item {
     background-color:  rgb(251, 251, 216);
 }
 
