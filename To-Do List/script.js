@@ -22,20 +22,6 @@ var TODOLIST = (function toDoListInit() {
         }
     };
 
-    ListItemConstructor.prototype.setText = function (text) {
-        var listItemReference;
-        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
-        listItemReference.querySelector(`[todo-type="text-holder"]`).textContent = text;
-        this.todoText = text;
-    };
-
-    ListItemConstructor.prototype.changeID = function (newID) {
-        var listItemReference;
-        listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
-        listItemReference.setAttribute("todo-id", `${newID}`);
-        this.todoID = newID;
-    };
-
     ListItemConstructor.prototype.setChecked = function (value) {
         var listItemReference;
         listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
@@ -68,6 +54,17 @@ var TODOLIST = (function toDoListInit() {
         addItem();
     });
 
+    document.getElementById('btn-select-all').addEventListener('click', function selectAllOnClick(event) { //Select-Deselect All
+        var i, check_uncheck = true;
+        if (listOfItemObjects.length > 0 && listOfItemObjects[0].todoChecked) {
+            check_uncheck = false;
+        }
+        for (i = 0; i < listOfItemObjects.length; i += 1) {
+            listOfItemObjects[i].setChecked(check_uncheck);
+        }
+        saveToLocalStorage();
+    });
+
     document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClick(event) { //delete all selected elements
         var i;
         for (i = listOfItemObjects.length - 1; i >= 0; i -= 1) {
@@ -88,16 +85,6 @@ var TODOLIST = (function toDoListInit() {
         saveToLocalStorage();
     });
 
-    document.getElementById('btn-select-all').addEventListener('click', function selectAllOnClick(event) { //Select-Deselect All
-        var i, check_uncheck = true;
-        if (listOfItemObjects.length > 0 && listOfItemObjects[0].todoChecked) {
-            check_uncheck = false;
-        }
-        for (i = 0; i < listOfItemObjects.length; i += 1) {
-            listOfItemObjects[i].setChecked(check_uncheck);
-        }
-        saveToLocalStorage();
-    });
 
     listContainer.addEventListener("click", function listContainerOnClickListener(event) { //Using Event-bubbling to find the target.
         var index, clickedListItem;
