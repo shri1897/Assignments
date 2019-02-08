@@ -1,5 +1,4 @@
 (function toDoListInit() {
-
     var listOfItemObjects = [];
     const listContainer = document.getElementById("list-container"), //Most reused element.
         templateItem = document.querySelector(".template-list-item"), //Used for creating new List element.
@@ -53,6 +52,7 @@
             listItemReference.classList.add("done-class");
             this.todoStatus = true;
         }
+        saveStateToLocalStorage();
     };
 
     ListItemConstructor.prototype.setChecked = function (value) {
@@ -63,6 +63,7 @@
         }
         listItemReference.querySelector(`[todo-type="check"]`).checked = value;
         this.todoChecked = value;
+        saveStateToLocalStorage();
     };
 
     ListItemConstructor.prototype.removeObject = function () {
@@ -75,6 +76,7 @@
             listItemReference.setAttribute("todo-id", `${i}`);
             listOfItemObjects[i].todoID = i;
         }
+        saveStateToLocalStorage();
     };
 
     textBox.addEventListener('keypress', function textBoxOnEnterKeyListener(event) {
@@ -89,13 +91,10 @@
 
     document.getElementById('btn-select-all').addEventListener('click', function selectAllOnClickListener(event) { //Select-Deselect All
         var i, check_uncheck = true;
-        if (listOfItemObjects.length > 0 && listOfItemObjects[0].todoChecked) {
+        if (listOfItemObjects[0] && listOfItemObjects[0].todoChecked) {
             check_uncheck = false;
         }
-        for (i = 0; i < listOfItemObjects.length; i += 1) {
-            listOfItemObjects[i].setChecked(check_uncheck);
-        }
-        saveStateToLocalStorage();
+        listOfItemObjects.map( object => object.setChecked(check_uncheck));
     });
 
     document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClickListener(event) { //delete all selected elements
@@ -105,7 +104,6 @@
                 listOfItemObjects[i].removeObject();
             }
         }
-        saveStateToLocalStorage();
     });
 
     document.getElementById('btn-delete-completed').addEventListener('click', function deleteCompletedOnClickListener(event) { // Delete all completed elements
@@ -115,9 +113,7 @@
                 listOfItemObjects[i].removeObject();
             }
         }
-        saveStateToLocalStorage();
     });
-
 
     listContainer.addEventListener("click", function listContainerOnClickListener(event) { //Using Event-bubbling to find the target.
         var index, clickedListItem;
@@ -140,7 +136,6 @@
                     break;
                 }
         }
-        saveStateToLocalStorage();
         event.stopPropagation();
     });
 
