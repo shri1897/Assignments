@@ -1,11 +1,44 @@
-var TODOLIST = (function toDoListInit() {
+(function toDoListInit() {
 
-    var listOfItemObjects = [],
-        listContainer = document.getElementById("list-container"), //Most reused element.
+    var listOfItemObjects = [];
+    const listContainer = document.getElementById("list-container"), //Most reused element.
         templateItem = document.querySelector(".template-list-item"), //Used for creating new List element.
         textBox = document.getElementById("text-box"); //Used for creating new list element.
 
-    function ListItemConstructor(todoID, todoText) {
+    const addItem = function (text, status, checked) { //Adding List Item using cloning and pushing Item to allElementsArray Array.
+        var newItem, textvalue, latestIndex;
+        textvalue = text || textBox.value;
+        textBox.value = "";
+        if (textvalue) {
+            //Creating new item from the Template
+            newItem = templateItem.cloneNode(true);
+            newItem.querySelector(`[todo-type="text-holder"]`).textContent = textvalue;
+            newItem.classList.remove("template-list-item");
+            listContainer.appendChild(newItem);
+            //Adding the new item to the list of item objects.
+            latestIndex = listOfItemObjects.length;
+            newItem.setAttribute("todo-id", `${latestIndex}`);
+            listOfItemObjects[latestIndex] = new ListItemConstructor(latestIndex, textvalue);
+            listOfItemObjects[latestIndex].setStatus(status);
+            listOfItemObjects[latestIndex].setChecked(checked);
+        }
+        saveToLocalStorage();
+    };
+
+    const saveToLocalStorage = function () {
+        localStorage.setItem("com.todo-list-Domain/listOfItemObjects", JSON.stringify(listOfItemObjects));
+    };
+
+    const reloadFromLocalStorage = function () {
+        var i, retrievedObject, temp;
+        retrievedObject = JSON.parse(localStorage.getItem("com.todo-list-Domain/listOfItemObjects"));
+        for (i = 0; i < retrievedObject.length; i += 1) {
+            temp = retrievedObject[i];
+            addItem(temp.todoText, temp.todoStatus, temp.todoChecked);
+        }
+    };
+
+    const ListItemConstructor = function (todoID, todoText) {
         this.todoID = todoID;
         this.todoText = todoText;
         this.todoStatus = false;
@@ -25,7 +58,7 @@ var TODOLIST = (function toDoListInit() {
     ListItemConstructor.prototype.setChecked = function (value) {
         var listItemReference;
         listItemReference = listContainer.querySelector(`[todo-id="${this.todoID}"]`);
-        if(!value){
+        if (!value) {
             value = false;
         }
         listItemReference.querySelector(`[todo-type="check"]`).checked = value;
@@ -44,7 +77,7 @@ var TODOLIST = (function toDoListInit() {
         }
     };
 
-    textBox.addEventListener("keypress", function textBoxOnEnterKeyPressed(event) {
+    textBox.addEventListener("keypress", function textBoxOnEnterKeyListener(event) {
         if (event.keyCode === 13) { //Add item If enter key pressed
             addItem();
         }
@@ -54,7 +87,7 @@ var TODOLIST = (function toDoListInit() {
         addItem();
     });
 
-    document.getElementById('btn-select-all').addEventListener('click', function selectAllOnClick(event) { //Select-Deselect All
+    document.getElementById('btn-select-all').addEventListener('click', function selectAllOnClickListener(event) { //Select-Deselect All
         var i, check_uncheck = true;
         if (listOfItemObjects.length > 0 && listOfItemObjects[0].todoChecked) {
             check_uncheck = false;
@@ -65,7 +98,7 @@ var TODOLIST = (function toDoListInit() {
         saveToLocalStorage();
     });
 
-    document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClick(event) { //delete all selected elements
+    document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClickListener(event) { //delete all selected elements
         var i;
         for (i = listOfItemObjects.length - 1; i >= 0; i -= 1) {
             if (listOfItemObjects[i].todoChecked) {
@@ -75,7 +108,7 @@ var TODOLIST = (function toDoListInit() {
         saveToLocalStorage();
     });
 
-    document.getElementById('btn-delete-completed').addEventListener('click', function deleteCompletedOnClick(event) { // Delete all completed elements
+    document.getElementById('btn-delete-completed').addEventListener('click', function deleteCompletedOnClickListener(event) { // Delete all completed elements
         var i;
         for (i = listOfItemObjects.length - 1; i >= 0; i -= 1) {
             if (listOfItemObjects[i].todoStatus) {
@@ -110,38 +143,6 @@ var TODOLIST = (function toDoListInit() {
         saveToLocalStorage();
         event.stopPropagation();
     });
-
-    function addItem(text, status, checked) { //Adding List Item using cloning and pushing Item to allElementsArray Array.
-        var newItem, textvalue, latestIndex;
-        textvalue = text || textBox.value;
-        textBox.value = "";
-        if (textvalue) {
-            newItem = templateItem.cloneNode(true);
-            newItem.querySelector(`[todo-type="text-holder"]`).textContent = textvalue;
-            newItem.classList.remove("template-list-item");
-            listContainer.appendChild(newItem);
-
-            latestIndex = listOfItemObjects.length;
-            newItem.setAttribute("todo-id", `${latestIndex}`);
-            listOfItemObjects[latestIndex] = new ListItemConstructor(latestIndex, textvalue);
-            listOfItemObjects[latestIndex].setStatus(status);
-            listOfItemObjects[latestIndex].setChecked(checked);
-        }
-        saveToLocalStorage();
-    };
-
-    function saveToLocalStorage() {
-        localStorage.setItem("com.todo-list-Domain/listOfItemObjects", JSON.stringify(listOfItemObjects));
-    };
-
-    function reloadFromLocalStorage() {
-        var i, retrievedObject, temp;
-        retrievedObject = JSON.parse(localStorage.getItem("com.todo-list-Domain/listOfItemObjects"));
-        for (i = 0; i < retrievedObject.length; i += 1) {
-            temp = retrievedObject[i];
-            addItem(temp.todoText, temp.todoStatus, temp.todoChecked);
-        }
-    };
 
     reloadFromLocalStorage();
 })();
