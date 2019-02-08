@@ -22,10 +22,10 @@
             listOfItemObjects[latestIndex].setStatus(status);
             listOfItemObjects[latestIndex].setChecked(checked);
         }
-        saveToLocalStorage();
+        saveStateToLocalStorage();
     };
 
-    const saveToLocalStorage = function () {
+    const saveStateToLocalStorage = function () {
         localStorage.setItem("com.todo-list-Domain/listOfItemObjects", JSON.stringify(listOfItemObjects));
     };
 
@@ -77,7 +77,7 @@
         }
     };
 
-    textBox.addEventListener("keypress", function textBoxOnEnterKeyListener(event) {
+    textBox.addEventListener('keypress', function textBoxOnEnterKeyListener(event) {
         if (event.keyCode === 13) { //Add item If enter key pressed
             addItem();
         }
@@ -95,7 +95,7 @@
         for (i = 0; i < listOfItemObjects.length; i += 1) {
             listOfItemObjects[i].setChecked(check_uncheck);
         }
-        saveToLocalStorage();
+        saveStateToLocalStorage();
     });
 
     document.getElementById('btn-delete-selected').addEventListener('click', function deleteSelectedOnClickListener(event) { //delete all selected elements
@@ -105,7 +105,7 @@
                 listOfItemObjects[i].removeObject();
             }
         }
-        saveToLocalStorage();
+        saveStateToLocalStorage();
     });
 
     document.getElementById('btn-delete-completed').addEventListener('click', function deleteCompletedOnClickListener(event) { // Delete all completed elements
@@ -115,7 +115,7 @@
                 listOfItemObjects[i].removeObject();
             }
         }
-        saveToLocalStorage();
+        saveStateToLocalStorage();
     });
 
 
@@ -140,7 +140,7 @@
                     break;
                 }
         }
-        saveToLocalStorage();
+        saveStateToLocalStorage();
         event.stopPropagation();
     });
 
