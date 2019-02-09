@@ -1,0 +1,83 @@
+html {
+    background-color: rgb(124, 124, 89);
+}
+
+
+#main-body {
+    display: flex;
+    justify-content: center;
+}
+#root {
+  display: flex;
+  justify-content: center;
+}
+/* ____________________________________________________________________*/
+
+#text-box {
+    border-radius: 10px;
+    text-align: center;
+    width: 600px;
+    height: 50px;
+    font-size: 14px;
+    background-color: #fffff1;
+}
+::placeholder {
+    color: #dddddd;
+}
+
+.input-button{
+    background-color: beige;
+    color: firebrick;
+    border-radius: 28px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+}
+#btn-add {
+    color: olive;
+}
+#btn-select-all {
+    color: #3974a9;
+}
+
+/* ____________________________________________________________________*/
+
+#list-container {
+    flex-flow: column wrap;
+    margin-top: 5px;
+}
+
+#list-container>div {
+    display: flex;
+    border: 1px solid #bbbbbb;
+    width: 600px;
+    border-radius: 8px;
+}
+
+#list-container>div>p {
+    width: 600px;
+    word-break: break-word;
+
+}
+
+#list-container>div>.check-box {
+    align-self: center;
+    margin: 15px;
+
+}
+.template-list-item {
+    display: none;
+    background-color:  rgb(251, 251, 216);
+}
+.list-item {
+    background-color:  rgb(251, 251, 216);
+}
+
+/* ____________________________________________________________________*/
+
+.done-class {
+    background: aquamarine;
+}
+.done-class > p {
+    text-decoration: line-through;
+}
