@@ -35,8 +35,8 @@
 }
 
 .btn-done {
-    background: #189c18;
-    color: white;
+    color: black;
+    background-color: #39bd39;
     border: black;
     font-weight: bold;
     border-radius: 4px;
@@ -44,15 +44,13 @@
 }
 
 .btn-x {
-    background: #189c18;
-    border:  black;
-    color: white;
-    font-weight: bold;
+    color: black;
+    background-color: #39bd39;
     border-radius: 4px;
     margin: 1px;
 }
 .btn-done:hover, .btn-x:hover {
-    color: black;
-    background-color: #39bd39;
+    background: #189c18;
+    color: white;
     cursor: pointer;
 }
