@@ -1,0 +1,50 @@
+
+.list-item {
+    display: flex;
+    border: 2px solid black;
+    width: 600px;
+    border-radius: 8px;
+    margin: 2px;
+    background-color:  rgb(190, 255, 170);
+    color: black;
+}
+.done-class {
+    display: flex;
+    border: 2px solid black;
+    width: 600px;
+    border-radius: 8px;
+    margin: 2px;
+    background-color:  rgba(190, 255, 170, 0.329);
+}
+.done-class > p {
+    text-decoration: line-through;
+    color: white;
+}
+.para {
+    width: 600px;
+    word-break: break-word;
+    margin-left: 5px;
+}
+.check-box {
+    align-self: center;
+    padding: 10px;
+    margin: 10px;
+}
+
+.btn-done {
+    background: #189c18;
+    color: white;
+    border: black;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 1px;
+}
+
+.btn-x {
+    background: #189c18;
+    border:  black;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 1px;
+}

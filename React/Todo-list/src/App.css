@@ -1,83 +1,78 @@
 html {
-    background-color: rgb(124, 124, 89);
+    background-color: #303030;
 }
 
-
-#main-body {
+.App {
     display: flex;
-    justify-content: center;
-}
-#root {
-  display: flex;
-  justify-content: center;
+    flex-flow: column;
 }
 /* ____________________________________________________________________*/
-
-#text-box {
+.text-input {
+    background-color:#189c18;
+    padding-left: 100px; 
+}
+.text-box {
+    margin-top: 3px;
     border-radius: 10px;
+    border: 2px solid black;
     text-align: center;
     width: 600px;
     height: 50px;
     font-size: 14px;
-    background-color: #fffff1;
+    background-color: #fffffff1;
 }
 ::placeholder {
-    color: #dddddd;
+    color: #bbb8b8;
 }
 
-.input-button{
-    background-color: beige;
-    color: firebrick;
-    border-radius: 28px;
+.btn-delete-completed{
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.btn-delete-selected{
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+    margin: 2px;
+}
+.btn-add {
+    color: #56ff3b;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+    margin: 2px;
+}
+.btn-select-all {
+    color: #8e86fc;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
     min-width: 100px;
     height: 55px;
     cursor: pointer;
 }
-#btn-add {
-    color: olive;
-}
-#btn-select-all {
-    color: #3974a9;
-}
 
 /* ____________________________________________________________________*/
 
-#list-container {
+.list-container {
     flex-flow: column wrap;
-    margin-top: 5px;
+    background: #303030;
+    padding-left: 100px;
 }
 
-#list-container>div {
-    display: flex;
-    border: 1px solid #bbbbbb;
-    width: 600px;
-    border-radius: 8px;
-}
-
-#list-container>div>p {
-    width: 600px;
-    word-break: break-word;
-
-}
-
-#list-container>div>.check-box {
-    align-self: center;
-    margin: 15px;
-
-}
-.template-list-item {
-    display: none;
-    background-color:  rgb(251, 251, 216);
-}
-.list-item {
-    background-color:  rgb(251, 251, 216);
-}
 
 /* ____________________________________________________________________*/
-
-.done-class {
-    background: aquamarine;
-}
-.done-class > p {
-    text-decoration: line-through;
-}

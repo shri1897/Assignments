@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import classes from './App.css';
 import ListTemplate from './ListTemplate/ListTemplate.js';
 
 class App extends Component {
@@ -14,115 +14,106 @@ class App extends Component {
 
   addItem = () => {
     let textBox = document.getElementById("text-box");
-    if(textBox.value) {
-      let newObject = this.state.listOfObjects;
-      let newElement =  {id: newObject.length, text: textBox.value , status: false, checked: false};
+    if (textBox.value) {
+      let newObject = this.state.listOfObjects.slice();
+      let newElement = { id: newObject.length, text: textBox.value, status: false, checked: false };
       newObject.push(newElement);
-      this.saveToLocalStorage();
-      console.table(newObject);
-      this.setState({listOfObjects: newObject});
-      localStorage.setItem("com.react.todolist", JSON.stringify(newObject));
+      this.setState({ listOfObjects: newObject });
       textBox.value = "";
     }
   }
 
-  addButtonHandler = () => {
+  addbuttonClickHandler = () => {
     this.addItem();
   }
 
   textBoxOnEnterKeyHandler = (event) => {
-    if(event.which === 13 ) {
+    if (event.which === 13) {
       this.addItem();
     }
   }
 
-  deleteCompletedButtonHandler = () => {
-    let newObject = this.state.listOfObjects.filter( (el) => {
-      if(!el.status) {
+  deleteCompletedbuttonClickHandler = () => {
+    let newObject = this.state.listOfObjects.filter((el) => {
+      if (!el.status) {
         return true;
       }
     });
-    this.setState({listOfObjects: newObject});
-    this.saveToLocalStorage(newObject);
+    this.setState({ listOfObjects: newObject });
   }
 
-  deleteSelectedButtonHandler = () => {
-    let newObject = this.state.listOfObjects.filter( (el) => {
-      if(!el.checked) {
+  deleteSelectedbuttonClickHandler = () => {
+    let newObject = this.state.listOfObjects.filter((el) => {
+      if (!el.checked) {
         return true;
       }
     });
-    this.setState({listOfObjects: newObject});
-    this.saveToLocalStorage(newObject);
+    this.setState({ listOfObjects: newObject });
   }
 
-  selectAllButtonHandler = () => {
+  selectAllbuttonClickHandler = () => {
     let newCheckValue = true;
-    if(this.state.listOfObjects[0] && this.state.listOfObjects[0].checked) {
+    if (this.state.listOfObjects[0] && this.state.listOfObjects[0].checked) {
       newCheckValue = false;
     }
-    let newObject = [];
-    this.state.listOfObjects.map( (el) => {
+    this.state.listOfObjects.map((el) => {
       el.checked = newCheckValue;
-      newObject.push(el);
       return true;
     });
-    this.setState({listOfObjects: newObject});
-    this.saveToLocalStorage(newObject);
+    this.setState(this.state);
   }
 
-  buttonXHandler = (event) => {
+  buttonCloseClickHandler = (event) => {
     let id = event.target.parentElement.getAttribute('todo-id');
     this.state.listOfObjects.splice(id, 1);
     this.setState(this.state);
-    this.saveToLocalStorage(this.state.listOfObjects);
   }
 
-  buttonDoneHandler = (event) => {
+  buttonDoneClickHandler = (event) => {
     let id = event.target.parentElement.getAttribute('todo-id');
     this.state.listOfObjects[id].status = true;
     this.setState(this.state);
-    this.saveToLocalStorage(this.state.listOfObjects);
   }
 
-  checkBoxHandler = (event) => {
+  checkBoxClickHandler = (event) => {
     let id = event.target.parentElement.getAttribute('todo-id');
     let newChecked = event.target.checked;
     this.state.listOfObjects[id].checked = newChecked;
     this.setState(this.state);
-    this.saveToLocalStorage(this.state.listOfObjects);
   }
 
   render() {
+    this.saveToLocalStorage(this.state.listOfObjects);
     let listOfItems = this.state.listOfObjects[0] ? this.state.listOfObjects.map(el => {
-      return <ListTemplate 
-              key={this.state.listOfObjects.indexOf(el)}
-              id={this.state.listOfObjects.indexOf(el)} 
-              text={el.text} 
-              status={el.status} 
-              ischecked={el.checked}
-              checkBoxHandler={this.checkBoxHandler.bind(this)}
-              buttonDoneHandler={this.buttonDoneHandler.bind(this)}
-              buttonXHandlerr={this.buttonXHandler}></ListTemplate>
+      return <ListTemplate
+        key={this.state.listOfObjects.indexOf(el)}
+        id={this.state.listOfObjects.indexOf(el)}
+        text={el.text}
+        status={el.status}
+        isChecked={el.checked}
+        checkBoxHandler={this.checkBoxClickHandler.bind(this)}
+        buttonDoneHandler={this.buttonDoneClickHandler.bind(this)}
+        buttonCloseHandler={this.buttonCloseClickHandler.bind(this)}></ListTemplate>
     }) : null;
+
     return (
-      <div className="App">
+      <div className={classes.App}>
 
-        <div id="text-input">
-            <input type="text" id="text-box" placeholder="Write something to add" onKeyPress={this.textBoxOnEnterKeyHandler}></input>
-            <button id="btn-add" className="input-button" onClick={this.addButtonHandler}>Add</button>
-            <button id="btn-select-all" className="input-button" onClick={this.selectAllButtonHandler}>Select/Deselect All</button>
-            <button id="btn-delete-selected" className="input-button" onClick={this.deleteSelectedButtonHandler}>Delete Selected</button>
-            <button id="btn-delete-completed" className="input-button" onClick={this.deleteCompletedButtonHandler}>Delete Completed</button>
+        <div id="text-input" className={classes['text-input']}>
+          <input type="text" id="text-box" className={classes['text-box']} placeholder="Write something to add" onKeyPress={this.textBoxOnEnterKeyHandler}></input>
+          <button id="btn-add" className={classes['btn-add']} onClick={this.addbuttonClickHandler}>ADD</button>
+          <button id="btn-select-all" className={classes['btn-select-all']} onClick={this.selectAllbuttonClickHandler}>SELECT/DESELECT ALL</button>
+          <button id="btn-delete-selected" className={classes['btn-delete-selected']} onClick={this.deleteSelectedbuttonClickHandler}>DELETE SELECTED</button>
+          <button id="btn-delete-completed" className={classes['btn-delete-completed']} onClick={this.deleteCompletedbuttonClickHandler}>DELETE COMPLETED</button>
+        </div>
+        
+        <div id="list-container" className={classes['list-container']}>
+          {listOfItems}
         </div>
 
-        <div id="list-container">
-            {listOfItems}
-        </div>
       </div>
     );
   }
 }
 
 export default App;
-

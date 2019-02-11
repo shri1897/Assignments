@@ -1,29 +1,17 @@
 import React from 'react';
+import classes from './ListTemplate.css'
 const listTemplate = (props) => {
-    let status = "list-item";
-
+    let listClass = classes['list-item'];
     if(props.status) {
-        status = "list-item done-class"
-    }
-
-    if(props.ischecked) {
-    return (
-        <div className={status} todo-id={props.id}>
-            <input type="checkbox" todo-type="check" className="check-box" onClick={props.checkBoxHandler} checked ></input>
-            <p todo-type="text-holder">{props.text}</p>
-            <button className="buttonClass-done"  todo-type="btn-done" onClick={props.buttonDoneHandler}>Done</button>
-            <button className="buttonClass-x" todo-type = "btn-x" onClick={props.buttonXHandlerr}>X</button>
-        </div>
-        );
+        listClass = classes['done-class'];
     }
     return (
-        <div className={status} todo-id={props.id}>
-            <input type="checkbox" todo-type="check" className="check-box" onClick={props.checkBoxHandler}></input>
-            <p todo-type="text-holder">{props.text}</p>
-            <button className="buttonClass-done"  todo-type="btn-done" onClick={props.buttonDoneHandler}>Done</button>
-            <button className="buttonClass-x" todo-type = "btn-x" onClick={props.buttonXHandlerr}>X</button>
+        <div className={listClass} todo-id={props.id}>
+            <input type="checkbox" todo-type="check" className={classes['check-box']} onClick={props.checkBoxHandler} checked={props.isChecked}></input>
+            <p todo-type="text-holder" className={classes.para}>{props.text}</p>
+            <button className={classes['btn-done']}  todo-type="btn-done" onClick={props.buttonDoneHandler}>Done</button>
+            <button className={classes['btn-x']} todo-type = "btn-x" onClick={props.buttonCloseHandler}>X</button>
         </div>
-        );
+    );
 }
-
 export default listTemplate;
