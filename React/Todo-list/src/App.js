@@ -5,11 +5,7 @@ import ListTemplate from './ListTemplate/ListTemplate.js';
 class App extends Component {
 
   state = {
-    listOfObjects: JSON.parse(localStorage.getItem("com.react.todolist"))
-  }
-
-  saveToLocalStorage = (object) => {
-    localStorage.setItem("com.react.todolist", JSON.stringify(object));
+    listOfObjects: JSON.parse(localStorage.getItem('com.react.todolist'))
   }
 
   addItem = () => {
@@ -83,7 +79,7 @@ class App extends Component {
   }
 
   render() {
-    this.saveToLocalStorage(this.state.listOfObjects);
+    localStorage.setItem('com.react.todolist', JSON.stringify(this.state.listOfObjects));
     let listOfItems = this.state.listOfObjects[0] ? this.state.listOfObjects.map(el => {
       return <ListTemplate
         key={this.state.listOfObjects.indexOf(el)}

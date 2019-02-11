@@ -30,6 +30,9 @@
     padding: 10px;
     margin: 10px;
 }
+.check-box:hover{
+    cursor: pointer;
+}
 
 .btn-done {
     background: #189c18;
@@ -47,4 +50,9 @@
     font-weight: bold;
     border-radius: 4px;
     margin: 1px;
+}
+.btn-done:hover, .btn-x:hover {
+    color: black;
+    background-color: #39bd39;
+    cursor: pointer;
 }

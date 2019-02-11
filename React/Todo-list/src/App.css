@@ -26,7 +26,7 @@ html {
 }
 
 .btn-delete-completed{
-    color: #ffffff;
+    color: #ff2aed;
     background-color: #303030;
     border: 1px solid black;
     border-radius: 10px;
@@ -37,7 +37,7 @@ html {
 }
 
 .btn-delete-selected{
-    color: #ffffff;
+    color: #ff1e1e;
     background-color: #303030;
     border: 1px solid black;
     border-radius: 10px;
@@ -45,6 +45,11 @@ html {
     height: 55px;
     cursor: pointer;
     margin: 2px;
+}
+.btn-add:hover, .btn-select-all:hover,
+ .btn-delete-selected:hover, .btn-delete-completed:hover {
+    color: white;
+    background-color: #383737;
 }
 .btn-add {
     color: #56ff3b;
