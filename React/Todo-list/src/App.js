@@ -5,7 +5,7 @@ import ListTemplate from './ListTemplate/ListTemplate.js';
 class App extends Component {
 
   state = {
-    listOfObjects: JSON.parse(localStorage.getItem('com.react.todolist'))
+    listOfObjects: JSON.parse(localStorage.getItem('com.react.todolist')) || []
   }
 
   addItem = () => {
