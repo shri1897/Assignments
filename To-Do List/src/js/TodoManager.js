@@ -5,10 +5,11 @@ import {TodoActionBar} from './TodoActionBar.js';
 class TodoManager extends View {
     constructor() {
         super();
-        this.listOfItemObjects = reloadFromLocalStorage();
+        this.listOfItemObjects = new Map();
     }
 
     init() {
+        this.listOfItemObjects = reloadFromLocalStorage();
         this.todoListItems = new TodoListItems();
         this.todoActionBar = new TodoActionBar();
         this.todoActionBar.init(this.listOfItemObjects, this.render);
@@ -18,12 +19,12 @@ class TodoManager extends View {
 
     render(listOfItemObjects) {
         let newItem, newJSONFromMap = [];
-        let templateItem = document.querySelector('.template-list-item');
+        let templateListItem = document.querySelector('.template-list-item');
         let listContainer = document.getElementById('list-container');
         listContainer.innerHTML = "";
 
         listOfItemObjects.forEach((value, key) => {
-            newItem = templateItem.cloneNode(true);
+            newItem = templateListItem.cloneNode(true);
             newItem.querySelector(`[todo-type="text-holder"]`).textContent = value.todoText;
             newItem.classList.remove("template-list-item");
             newItem.setAttribute("todo-id", `${key}`);

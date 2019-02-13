@@ -10,7 +10,7 @@ class TodoListItems extends View {
     }
 
     init(listOfItemObjects, renderCallBack) {
-        document.getElementById("list-container").addEventListener("click", (event) => { //Using Event-bubbling to find the target.
+        document.getElementById("list-container").onclick = (event) => { //Using Event-bubbling to find the target.
             let todoID, clickedListItem;
             clickedListItem = event.target.parentElement;
             todoID = parseInt(clickedListItem.getAttribute("todo-id"));
@@ -33,7 +33,7 @@ class TodoListItems extends View {
             }
             renderCallBack(listOfItemObjects);
             event.stopPropagation();
-        });
+        };
     }
 
     setStatus(status) {
