@@ -1,5 +1,5 @@
 import {View} from './View.js'
-import {TodoListItems} from './TodoListItems.js';
+import {TodoListItem} from './TodoListItem.js';
 import {TodoActionBar} from './TodoActionBar.js';
 
 class TodoManager extends View {
@@ -9,52 +9,34 @@ class TodoManager extends View {
     }
 
     init() {
-        this.listOfItemObjects = reloadFromLocalStorage();
-        this.todoListItems = new TodoListItems();
+        this.todoListItem = new TodoListItem();
         this.todoActionBar = new TodoActionBar();
-        this.todoActionBar.init(this.listOfItemObjects, this.render);
-        this.todoListItems.init(this.listOfItemObjects, this.render);
-        this.render(this.listOfItemObjects);
+        this.todoActionBar.init(this.listOfItemObjects,this.addItem.bind(this), this.onListItemChange.bind(this));
+        this.todoListItem.init(this.listOfItemObjects, this.onListItemChange.bind(this));
     }
 
-    render(listOfItemObjects) {
-        let newItem, newJSONFromMap = [];
-        let templateListItem = document.querySelector('.template-list-item');
+    addItem(textValue) {
+        let timeStamp = new Date().getTime();
+        let newListItem = new TodoListItem(timeStamp, textValue);
+        this.listOfItemObjects.set(timeStamp, newListItem);
+        this.onListItemChange();
+    }
+    
+    onListItemChange() {
+        this.render();
+    }
+
+    render() {
+        let newItem;
         let listContainer = document.getElementById('list-container');
         listContainer.innerHTML = "";
 
-        listOfItemObjects.forEach((value, key) => {
-            newItem = templateListItem.cloneNode(true);
-            newItem.querySelector(`[todo-type="text-holder"]`).textContent = value.todoText;
-            newItem.classList.remove("template-list-item");
-            newItem.setAttribute("todo-id", `${key}`);
-            if (value.todoStatus) {
-                newItem.classList.add('done-class');
-            }
-            newItem.querySelector(`[todo-type="check"]`).checked = value.todoChecked;
+        this.listOfItemObjects.forEach((value, key) => {
+            newItem = this.todoListItem.createItem(value.todoID, value.todoText, value.todoStatus, value.todoChecked);
             listContainer.appendChild(newItem);
-            newJSONFromMap.push(value);
         });
-
-        console.log(newJSONFromMap);
-        localStorage.setItem("com.modular.todolist", JSON.stringify(newJSONFromMap));
+        console.log([...this.listOfItemObjects.values()]);
     }
 }
 
-const reloadFromLocalStorage = () => {
-    let retrivedList = JSON.parse(localStorage.getItem("com.modular.todolist"));
-    console.log(retrivedList);
-    if (retrivedList) {
-        let listOfObjects = new Map();
-        for (let i = 0; i < retrivedList.length; i += 1) {
-            listOfObjects.set(retrivedList[i].todoID, new TodoListItems(retrivedList[i].todoID, retrivedList[i].todoText, retrivedList[i].todoStatus, retrivedList[i].todoChecked));
-        }
-        return listOfObjects;
-    } else {
-        return new Map();
-    }
-}
-/**------------------------------------------------------------------------------------------------------------------------- */
-export {
-    TodoManager
-};
+export {TodoManager};

@@ -1,68 +1,66 @@
-import {View} from './View.js'
-import { TodoListItems } from './TodoListItems.js';
+import { View } from './View.js'
 
-class TodoActionBar extends View{
+class TodoActionBar extends View {
 
     constructor() {
         super();
     }
 
-    init(listOfItemObjects, renderCallBack) {
+    init(listOfItemObjects, addItem, onItemChange) {
 
-        const textBox = document.getElementById("text-box");
-        const buttonAdd = document.getElementById("btn-add");
-        const buttonSelectAll = document.getElementById("btn-select-all");
-        const buttonDeleteSelected = document.getElementById("btn-delete-selected");
-        const buttonDeleteCompleted = document.getElementById("btn-delete-completed");
+        const textBox = document.getElementById("text-box"),
+            buttonAdd = document.getElementById("btn-add"),
+            buttonSelectAll = document.getElementById("btn-select-all"),
+            buttonDeleteSelected = document.getElementById("btn-delete-selected"),
+            buttonDeleteCompleted = document.getElementById("btn-delete-completed");
 
-        const addItem = () => {
-            let textvalue;
-            textvalue = document.getElementById("text-box").value;
-            document.getElementById("text-box").value = "";
-            if (textvalue) {
-                let timeStamp = new Date().getTime();
-                listOfItemObjects.set(timeStamp, new TodoListItems(timeStamp, textvalue));
-            }
-            renderCallBack(listOfItemObjects);
-        }
-
-        textBox.onkeypress =  function textBoxEnterKeyListener(event) {
+        textBox.onkeypress = (event) => {
             if (event.keyCode === 13) { //Add item If enter key pressed
-                addItem();
+                let textValue = textBox.value;
+                textBox.value = '';
+                if(textValue){
+                    addItem(textValue);
+                }
             }
         };
 
-        buttonAdd.onclick = function buttonAddClickListener() {
-            addItem();
+        buttonAdd.onclick = (event) => {
+            let textValue = textBox.value;
+            textBox.value = '';
+            if(textValue){
+                addItem(textValue);
+            }
         };
 
-        buttonSelectAll.onclick = function selectAllClickListener(event) { 
+        buttonSelectAll.onclick = (event) => {
             var check_uncheck = true;
-            if (listOfItemObjects.values().next().value && listOfItemObjects.values().next().value.todoChecked) {
+            var firstTodoElement = listOfItemObjects.values().next().value;
+            if ( firstTodoElement && firstTodoElement.todoChecked) {
                 check_uncheck = false;
             }
+
             for (var item of listOfItemObjects.values()) {
-                item.setChecked(check_uncheck);
+                item.todoChecked = check_uncheck;
             }
-            renderCallBack(listOfItemObjects);
+            onItemChange();
         };
 
-        buttonDeleteSelected.onclick =  function deleteSelectedClickListener(event) { 
+        buttonDeleteSelected.onclick = (event) => {
             listOfItemObjects.forEach((value, key) => {
                 if (value.todoChecked) {
                     listOfItemObjects.delete(key);
                 }
             });
-            renderCallBack(listOfItemObjects);
+            onItemChange();
         };
 
-        buttonDeleteCompleted.onclick = (event) => { 
+        buttonDeleteCompleted.onclick = (event) => {
             listOfItemObjects.forEach((value, key) => {
                 if (value.todoStatus) {
                     listOfItemObjects.delete(key);
                 }
             });
-            renderCallBack(listOfItemObjects);
+            onItemChange();
         };
     }
 }
