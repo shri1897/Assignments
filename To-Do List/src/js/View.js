@@ -1,19 +1,30 @@
-class View {
-    constructor() {
+function View() {};
 
-    }
+View.prototype.init = function () {}
+View.prototype.render = function () {}
+View.prototype.delete = function () {}
 
-    init() {
-
-    }
-
-    render() {
-
-    }
-
-    delete() {
-
-    }
-}
 
 export {View};
+
+
+////////////////////////////////////////////ES6////////////////////////////////////////////////////////////////
+
+
+// class View {
+//     constructor() {
+
+//     }
+
+//     init() {
+
+//     }
+
+//     render() {
+
+//     }
+
+//     delete() {
+
+//     }
+// }
