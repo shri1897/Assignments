@@ -6,6 +6,7 @@ function TodoListItem(todoID, todoText, todoStatus, todoChecked) {
     this.todoStatus = todoStatus === true ? true : false;
     this.todoChecked = todoChecked === true ? true : false;
 }
+
 TodoListItem.prototype = Object.create(View.prototype);
 TodoListItem.prototype.constructor = TodoListItem;
 
