@@ -3,7 +3,7 @@ import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
 
 function TodoManager() {
-    this.listOfItemObjects = new Map();
+    this.listOfItemObjects = new Map(); //needs a better name
 }
 
 TodoManager.prototype = Object.create(View.prototype);
@@ -19,7 +19,7 @@ TodoManager.prototype.init = function () {
 TodoManager.prototype.addItem = function (textValue) {
     let timeStamp = new Date().getTime(),
         newListItem = new TodoListItem(timeStamp, textValue);
-        
+
     this.listOfItemObjects.set(timeStamp, newListItem);
     this.onListItemChange();
 };

@@ -14,20 +14,20 @@ TodoListItem.prototype.init = function (listOfItemObjects, onListItemChange) {
     document.getElementById('list-container').onclick = (event) => {
         let todoID, itemWrapper;
 
-        itemWrapper = findItemWrapper(event.target);
+        itemWrapper = findItemWrapper(event.target, 'todo-id');
         todoID = parseInt(itemWrapper.getAttribute("todo-id"));
         switch (event.target.getAttribute("todo-type")) {
-            case "check":
+            case "select":
                 {
                     listOfItemObjects.get(todoID).todoChecked = event.target.checked;
                     break;
                 }
-            case "btn-done":
+            case "done":
                 {
                     listOfItemObjects.get(todoID).todoStatus = true;
                     break;
                 }
-            case "btn-x":
+            case "close":
                 {
                     listOfItemObjects.delete(todoID);
                     break;
@@ -47,14 +47,14 @@ TodoListItem.prototype.createItem = function (todoID, textValue, todoStatus, tod
     if (todoStatus) {
         newItem.classList.add('done-class');
     }
-    newItem.querySelector(`[todo-type="check"]`).checked = todoChecked;
+    newItem.querySelector(`[todo-type="select"]`).checked = todoChecked;
     return newItem;
 };
 
 
-const findItemWrapper = (element) => { //Find the closest parent wrapper of the passed element.
+const findItemWrapper = (element, className) => { //Find the closest parent wrapper of the passed element.
     while (element != document) {
-        if (element.getAttribute('todo-id')) {
+        if (element.getAttribute(className)) {
             return element;
         }
         element = element.parentElement;
