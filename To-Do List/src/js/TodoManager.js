@@ -1,86 +1,82 @@
 import { View } from './View.js'
 import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
+import { templateListItem } from './templateListItem.js';
 
-function TodoManager() {
-    this.listOfItemObjects = new Map(); //needs a better name
-}
+const todoList = { items: [] },
+    listContainer = document.getElementById('list-container'),
+    textBox = document.getElementById("text-box"),
+    buttonAdd = document.getElementById("btn-add"),
+    buttonSelectAll = document.getElementById("btn-select-all"),
+    buttonDeleteSelected = document.getElementById("btn-delete-selected"),
+    buttonDeleteCompleted = document.getElementById("btn-delete-completed");
+
+function TodoManager() { }
 
 TodoManager.prototype = Object.create(View.prototype);
 TodoManager.prototype.constructor = TodoManager;
 
 TodoManager.prototype.init = function () {
+    const props = {
+        todoList: todoList,
+        listContainer: listContainer,
+        textBox: textBox,
+        buttonAdd: buttonAdd,
+        buttonSelectAll: buttonSelectAll,
+        buttonDeleteSelected: buttonDeleteSelected,
+        buttonDeleteCompleted: buttonDeleteCompleted,
+        addItem: this.addItem.bind(this),
+        deleteItem: this.deleteItem.bind(this),
+        onTodoListChange: this.onTodoListChange.bind(this)
+    }
     this.todoListItem = new TodoListItem();
     this.todoActionBar = new TodoActionBar();
-    this.todoActionBar.init(this.listOfItemObjects, this.addItem.bind(this), this.onListItemChange.bind(this));
-    this.todoListItem.init(this.listOfItemObjects, this.onListItemChange.bind(this));
+    this.todoActionBar.init(props);
+    this.todoListItem.init(props);
 };
 
 TodoManager.prototype.addItem = function (textValue) {
-    let timeStamp = new Date().getTime(),
-        newListItem = new TodoListItem(timeStamp, textValue);
+    let todoID = new Date().getTime(),  //todoID <- TimeStamp 
+        newListItem = new TodoListItem(todoID, textValue);
 
-    this.listOfItemObjects.set(timeStamp, newListItem);
-    this.onListItemChange();
+    todoList.items.push(newListItem);
+    this.onTodoListChange();
 };
 
-TodoManager.prototype.onListItemChange = function (textValue) {
+TodoManager.prototype.deleteItem = function (switchAction, index) {
+    switch (switchAction) {
+        case 'delete-selected': {
+            for (let i = todoList.items.length - 1; i >= 0; i--) {
+                if (todoList.items[i].todoChecked) {
+                    todoList.items.splice(i, 1);
+                }
+            }
+            break;
+        }
+        case 'delete-completed': {
+            for (let i = todoList.items.length - 1; i >= 0; i--) {
+                if (todoList.items[i].todoStatus) {
+                    todoList.items.splice(i, 1);
+                }
+            }
+            break;
+        }
+        case 'delete-index': {
+            todoList.items.splice(index, 1);
+            break;
+        }
+    }
+    this.onTodoListChange();
+}
+
+TodoManager.prototype.onTodoListChange = function () {
     this.render();
 };
 
 TodoManager.prototype.render = function () {
-    let newItem,
-        listContainer = document.getElementById('list-container'),
-        listContainerFrag = document.createDocumentFragment();
-
-    listContainer.innerHTML = "";
-
-    this.listOfItemObjects.forEach((value, key) => {
-        newItem = this.todoListItem.createItem(value.todoID, value.todoText, value.todoStatus, value.todoChecked);
-        listContainerFrag.appendChild(newItem);
-    });
-    listContainer.appendChild(listContainerFrag);
-    console.log([...this.listOfItemObjects.values()]);
-};
+    console.log(todoList);
+    let html = Mustache.to_html(templateListItem, todoList);
+    listContainer.innerHTML = html;
+}
 
 export { TodoManager };
-
-
-
-////////////////////////////////////////////CLASS////////////////////////////////////////////////////////////////
-// class TodoManager extends View {
-//     constructor() {
-//         super();
-//         this.listOfItemObjects = new Map();
-//     }
-
-//     init() {
-//         this.todoListItem = new TodoListItem();
-//         this.todoActionBar = new TodoActionBar();
-//         this.todoActionBar.init(this.listOfItemObjects,this.addItem.bind(this), this.onListItemChange.bind(this));
-//         this.todoListItem.init(this.listOfItemObjects, this.onListItemChange.bind(this));
-//     }
-
-//     addItem(textValue) {
-//         let timeStamp = new Date().getTime();
-//         let newListItem = new TodoListItem(timeStamp, textValue);
-//         this.listOfItemObjects.set(timeStamp, newListItem);
-//         this.onListItemChange();
-//     }
-
-//     onListItemChange() {
-//         this.render();
-//     }
-
-//     render() {
-//         let newItem;
-//         let listContainer = document.getElementById('list-container');
-//         listContainer.innerHTML = "";
-
-//         this.listOfItemObjects.forEach((value, key) => {
-//             newItem = this.todoListItem.createItem(value.todoID, value.todoText, value.todoStatus, value.todoChecked);
-//             listContainer.appendChild(newItem);
-//         });
-//         console.log([...this.listOfItemObjects.values()]);
-//     }
-// }

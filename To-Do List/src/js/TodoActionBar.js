@@ -4,131 +4,51 @@ function TodoActionBar() { };
 TodoActionBar.prototype = Object.create(View.prototype);
 TodoActionBar.prototype.constructor = TodoActionBar;
 
-TodoActionBar.prototype.init = function (listOfItemObjects, addItem, onItemChange) {
-    const textBox = document.getElementById("text-box"),
-        buttonAdd = document.getElementById("btn-add"),
-        buttonSelectAll = document.getElementById("btn-select-all"),
-        buttonDeleteSelected = document.getElementById("btn-delete-selected"),
-        buttonDeleteCompleted = document.getElementById("btn-delete-completed");
+TodoActionBar.prototype.init = function (todoManagerProps) {
 
-    textBox.onkeypress = (event) => {
-        if (event.keyCode === 13) { //Add item If enter key pressed
-            let textValue = textBox.value;
-            textBox.value = '';
-            if (textValue) {
-                addItem(textValue);
-            }
+    todoManagerProps.textBox.onkeypress = (event) => {
+        if (event.keyCode === 13) {     //Add item If enter key pressed
+            addItemEventHandler(todoManagerProps);
         }
     };
 
-    buttonAdd.onclick = (event) => {
-        let textValue = textBox.value;
-        textBox.value = '';
-        if (textValue) {
-            addItem(textValue);
-        }
-    };
+    todoManagerProps.buttonAdd.onclick = addItemEventHandler.bind(null, todoManagerProps);
 
-    buttonSelectAll.onclick = (event) => {
-        var check_uncheck = true,
-            firstTodoElement = listOfItemObjects.values().next().value;
-        if (firstTodoElement && firstTodoElement.todoChecked) {
-            check_uncheck = false;
-        }
+    todoManagerProps.buttonSelectAll.onclick = selectAllClickHandler.bind(null, todoManagerProps);
 
-        for (var item of listOfItemObjects.values()) {
-            item.todoChecked = check_uncheck;
-        }
-        onItemChange();
-    };
+    todoManagerProps.buttonDeleteSelected.onclick = deleteSelectedClickHandler.bind(null, todoManagerProps);
 
-    buttonDeleteSelected.onclick = (event) => {
-        listOfItemObjects.forEach((value, key) => {
-            if (value.todoChecked) {
-                listOfItemObjects.delete(key);
-            }
-        });
-        onItemChange();
-    };
-
-    buttonDeleteCompleted.onclick = (event) => {
-        listOfItemObjects.forEach((value, key) => {
-            if (value.todoStatus) {
-                listOfItemObjects.delete(key);
-            }
-        });
-        onItemChange();
-    };
+    todoManagerProps.buttonDeleteCompleted.onclick = deleteCompletedClickHandler.bind(null, todoManagerProps);
 };
 
+const addItemEventHandler = (todoManagerProps) => {
+    let textValue = todoManagerProps.textBox.value;
+    todoManagerProps.textBox.value = '';
+    if (textValue) {
+        todoManagerProps.addItem(textValue);
+    }
+}
+
+const selectAllClickHandler = (todoManagerProps) => {
+    var select_delesect = true,
+        firstTodoElement = todoManagerProps.todoList.items[0];
+
+    if (firstTodoElement && firstTodoElement.todoChecked) {
+        select_delesect = false;
+    }
+
+    for (let item of todoManagerProps.todoList.items) {
+        item.todoChecked = select_delesect;
+    }
+    todoManagerProps.onTodoListChange();
+}
+
+const deleteSelectedClickHandler = (todoManagerProps) => {
+    todoManagerProps.deleteItem('delete-selected');
+}
+
+const deleteCompletedClickHandler = (todoManagerProps) => {
+    todoManagerProps.deleteItem('delete-completed');
+}
+
 export { TodoActionBar };
-
-
-
-////////////////////////////////////////////CLASS////////////////////////////////////////////////////////////////
-
-
-// class TodoActionBar extends View {
-
-//     constructor() {
-//         super();
-//     }
-
-//     init(listOfItemObjects, addItem, onItemChange) {
-
-//         const textBox = document.getElementById("text-box"),
-//             buttonAdd = document.getElementById("btn-add"),
-//             buttonSelectAll = document.getElementById("btn-select-all"),
-//             buttonDeleteSelected = document.getElementById("btn-delete-selected"),
-//             buttonDeleteCompleted = document.getElementById("btn-delete-completed");
-
-//         textBox.onkeypress = (event) => {
-//             if (event.keyCode === 13) { //Add item If enter key pressed
-//                 let textValue = textBox.value;
-//                 textBox.value = '';
-//                 if(textValue){
-//                     addItem(textValue);
-//                 }
-//             }
-//         };
-
-//         buttonAdd.onclick = (event) => {
-//             let textValue = textBox.value;
-//             textBox.value = '';
-//             if(textValue){
-//                 addItem(textValue);
-//             }
-//         };
-
-//         buttonSelectAll.onclick = (event) => {
-//             var check_uncheck = true;
-//             var firstTodoElement = listOfItemObjects.values().next().value;
-//             if ( firstTodoElement && firstTodoElement.todoChecked) {
-//                 check_uncheck = false;
-//             }
-
-//             for (var item of listOfItemObjects.values()) {
-//                 item.todoChecked = check_uncheck;
-//             }
-//             onItemChange();
-//         };
-
-//         buttonDeleteSelected.onclick = (event) => {
-//             listOfItemObjects.forEach((value, key) => {
-//                 if (value.todoChecked) {
-//                     listOfItemObjects.delete(key);
-//                 }
-//             });
-//             onItemChange();
-//         };
-
-//         buttonDeleteCompleted.onclick = (event) => {
-//             listOfItemObjects.forEach((value, key) => {
-//                 if (value.todoStatus) {
-//                     listOfItemObjects.delete(key);
-//                 }
-//             });
-//             onItemChange();
-//         };
-//     }
-// }

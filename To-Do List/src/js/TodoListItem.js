@@ -10,108 +10,50 @@ function TodoListItem(todoID, todoText, todoStatus, todoChecked) {
 TodoListItem.prototype = Object.create(View.prototype);
 TodoListItem.prototype.constructor = TodoListItem;
 
-TodoListItem.prototype.init = function (listOfItemObjects, onListItemChange) {
-    document.getElementById('list-container').onclick = (event) => {
-        let todoID, itemWrapper;
+TodoListItem.prototype.init = function (todoManagerProps) {
 
-        itemWrapper = findItemWrapper(event.target, 'todo-id');
-        todoID = parseInt(itemWrapper.getAttribute("todo-id"));
-        switch (event.target.getAttribute("todo-type")) {
-            case "select":
-                {
-                    listOfItemObjects.get(todoID).todoChecked = event.target.checked;
-                    break;
-                }
-            case "done":
-                {
-                    listOfItemObjects.get(todoID).todoStatus = true;
-                    break;
-                }
-            case "close":
-                {
-                    listOfItemObjects.delete(todoID);
-                    break;
-                }
-        }
-        onListItemChange();
-        event.stopPropagation();
-    };
-};
-TodoListItem.prototype.createItem = function (todoID, textValue, todoStatus, todoChecked) {
-    let templateListItem = document.querySelector('.template-list-item'),
-        newItem = templateListItem.cloneNode(true);
-
-    newItem.querySelector(`[todo-type="text-holder"]`).textContent = textValue;
-    newItem.classList.remove("template-list-item");
-    newItem.setAttribute("todo-id", `${todoID}`);
-    if (todoStatus) {
-        newItem.classList.add('done-class');
+    todoManagerProps.listContainer.onclick = (event) => {
+        listContainerClickHandler(event, todoManagerProps);
     }
-    newItem.querySelector(`[todo-type="select"]`).checked = todoChecked;
-    return newItem;
 };
 
+const listContainerClickHandler = (event, todoManagerProps) => {
+    let itemWrapper = findItemWrapper(event.target, 'todo-id'),
+        todoID = parseInt(itemWrapper.getAttribute("todo-id")),
+        clickedListItem = todoManagerProps.todoList.items.find(item => item.todoID === todoID);
 
-const findItemWrapper = (element, className) => { //Find the closest parent wrapper of the passed element.
-    while (element != document) {
-        if (element.getAttribute(className)) {
+    switch (event.target.getAttribute("todo-action")) {
+        case "select-item":
+            {
+                clickedListItem.todoChecked = event.target.checked;
+                todoManagerProps.onTodoListChange();
+                break;
+            }
+        case "mark-done":
+            {
+                clickedListItem.todoStatus = true;
+                todoManagerProps.onTodoListChange();
+                break;
+            }
+        case "delete-item":
+            {
+                let index = todoManagerProps.todoList.items.indexOf(clickedListItem);
+                todoManagerProps.deleteItem('delete-index', index)
+                break;
+            }
+    }
+    event.stopPropagation();
+};
+
+const findItemWrapper = (element, attributeName) => { //returns the closest parent element of the passed element with given Attribute
+    while (element != null) {
+        if (element.getAttribute(attributeName)) {
             return element;
         }
         element = element.parentElement;
     }
+    throw new Error(`Parent element with ${attributeName} not found!`);
+
 };
 
 export { TodoListItem };
-
-
-////////////////////////////////////////////CLASS////////////////////////////////////////////////////////////////
-
-// class TodoListItem extends View {
-//     constructor(todoID, todoText, todoStatus, todoChecked) {
-//         super();
-//         this.todoID = todoID;
-//         this.todoText = todoText;
-//         this.todoStatus = todoStatus === true ? true : false;
-//         this.todoChecked = todoChecked === true ? true : false;
-//     }
-
-//     init(listOfItemObjects, onListItemChange) {
-//         document.getElementById('list-container').onclick = (event) => {       
-//             let todoID, itemWrapper;
-//             itemWrapper = findItemWrapper(event.target);
-//             todoID = parseInt(itemWrapper.getAttribute("todo-id"));
-//             switch (event.target.getAttribute("todo-type")) {
-//                 case "check":
-//                     {
-//                         listOfItemObjects.get(todoID).todoChecked = event.target.checked;
-//                         break;
-//                     }
-//                 case "btn-done":
-//                     {
-//                         listOfItemObjects.get(todoID).todoStatus = true;
-//                         break;
-//                     }
-//                 case "btn-x":
-//                     {
-//                         listOfItemObjects.delete(todoID);
-//                         break;
-//                     }
-//             }
-//             onListItemChange();
-//             event.stopPropagation();
-//         };
-//     }
-
-//     createItem(todoID, textValue,todoStatus, todoChecked) {
-//         let templateListItem = document.querySelector('.template-list-item');
-//         let newItem = templateListItem.cloneNode(true);
-//         newItem.querySelector(`[todo-type="text-holder"]`).textContent = textValue;
-//         newItem.classList.remove("template-list-item");
-//         newItem.setAttribute("todo-id", `${todoID}`);
-//         if (todoStatus) {
-//             newItem.classList.add('done-class');
-//         }
-//         newItem.querySelector(`[todo-type="check"]`).checked = todoChecked;
-//         return newItem;
-//     }
-// }
