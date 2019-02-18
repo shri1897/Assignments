@@ -1,4 +1,4 @@
-import { View } from './View.js'
+import { View } from './View.js';
 
 function TodoListItem(todoID, todoText, todoStatus, todoChecked) {
     this.todoID = todoID;
@@ -26,13 +26,13 @@ const listContainerClickHandler = (event, todoManagerProps) => {
         case "select-item":
             {
                 clickedListItem.todoChecked = event.target.checked;
-                todoManagerProps.onTodoListChange();
+                render(clickedListItem, itemWrapper);
                 break;
             }
         case "mark-done":
             {
                 clickedListItem.todoStatus = true;
-                todoManagerProps.onTodoListChange();
+                render(clickedListItem, itemWrapper);
                 break;
             }
         case "delete-item":
@@ -44,6 +44,13 @@ const listContainerClickHandler = (event, todoManagerProps) => {
     }
     event.stopPropagation();
 };
+
+const render = (todoListItem, todoListElement) => {
+    if (todoListItem.todoStatus) {
+        todoListElement.classList.add('done-class');
+    }
+    todoListElement.checked = todoListItem.todoChecked;
+}
 
 const findItemWrapper = (element, attributeName) => { //returns the closest parent element of the passed element with given Attribute
     while (element != null) {

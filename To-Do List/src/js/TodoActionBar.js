@@ -1,4 +1,5 @@
-import { View } from './View.js'
+import { View } from './View.js';
+
 function TodoActionBar() { };
 
 TodoActionBar.prototype = Object.create(View.prototype);
@@ -27,7 +28,7 @@ const addItemEventHandler = (todoManagerProps) => {
     if (textValue) {
         todoManagerProps.addItem(textValue);
     }
-}
+};
 
 const selectAllClickHandler = (todoManagerProps) => {
     var select_delesect = true,
@@ -41,14 +42,14 @@ const selectAllClickHandler = (todoManagerProps) => {
         item.todoChecked = select_delesect;
     }
     todoManagerProps.onTodoListChange();
-}
+};
 
 const deleteSelectedClickHandler = (todoManagerProps) => {
     todoManagerProps.deleteItem('delete-selected');
-}
+};
 
 const deleteCompletedClickHandler = (todoManagerProps) => {
     todoManagerProps.deleteItem('delete-completed');
-}
+};
 
 export { TodoActionBar };

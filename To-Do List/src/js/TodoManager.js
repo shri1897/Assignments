@@ -44,7 +44,7 @@ TodoManager.prototype.addItem = function (textValue) {
 };
 
 TodoManager.prototype.deleteItem = function (switchAction, index) {
-    switch (switchAction) {
+    switch (switchAction) {  // todoList needs to be updated. So, using Splice instead of Slice.
         case 'delete-selected': {
             for (let i = todoList.items.length - 1; i >= 0; i--) {
                 if (todoList.items[i].todoChecked) {
@@ -67,16 +67,15 @@ TodoManager.prototype.deleteItem = function (switchAction, index) {
         }
     }
     this.onTodoListChange();
-}
+};
 
 TodoManager.prototype.onTodoListChange = function () {
     this.render();
 };
 
 TodoManager.prototype.render = function () {
-    console.log(todoList);
-    let html = Mustache.to_html(templateListItem, todoList);
-    listContainer.innerHTML = html;
-}
+    let todoListHTML = Mustache.to_html(templateListItem, todoList);
+    listContainer.innerHTML = todoListHTML;
+};
 
 export { TodoManager };
