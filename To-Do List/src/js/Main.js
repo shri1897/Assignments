@@ -4,5 +4,4 @@ import {TodoManager} from './TodoManager'
     "use strict";
     const todoManager = new TodoManager();
     todoManager.init();
-    todoManager.render();
 })();

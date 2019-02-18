@@ -1,7 +1,7 @@
 import { View } from './View.js'
 import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
-import { templateListItem } from './templateListItem.js';
+import {broker} from './broker.js';
 
 function TodoManager() {
     this.todoList = window.todoList = {};
@@ -13,10 +13,10 @@ TodoManager.prototype.constructor = TodoManager;
 TodoManager.prototype.init = function () {
     this.todoActionBar = new TodoActionBar();
     this.todoActionBar.init();
-    document.addEventListener('deleteTodoListItem', (event) => { deleteTodoListItem(event.detail, this) });
-    document.addEventListener('deleteItem', (event) => { deleteItem(event.detail, this) });
-    document.addEventListener('addItem', (event) => { addItem(event.detail, this) });
-    document.addEventListener('setChecked', setChecked.bind(this));
+    broker.addEventListener('deleteTodoListItem', (event) => { deleteTodoListItem(event.detail, this) });
+    broker.addEventListener('deleteItem', (event) => { deleteItem(event.detail, this) });
+    broker.addEventListener('addItem', (event) => { addItem(event.detail, this) });
+    broker.addEventListener('setChecked', setChecked.bind(this));
 };
 
 const addItem = function (todoText, todoManager) {

@@ -1,4 +1,5 @@
 import { View } from './View.js';
+import {broker} from './broker.js';
 
 function TodoActionBar() { };
 
@@ -27,20 +28,20 @@ const addItemOnClick = function(){
     let todoText = document.getElementById('text-box').value;
     document.getElementById('text-box').value = '';
     if (todoText) {
-        document.dispatchEvent(new CustomEvent('addItem', {detail: todoText}));
+        broker.dispatchEvent(new CustomEvent('addItem', {detail: todoText}));
     }
 };
 
 const selectAllOnClick = function() {
-    document.dispatchEvent(new CustomEvent('setChecked'));
+    broker.dispatchEvent(new CustomEvent('setChecked'));
 };
 
 const deleteSelectedOnClick = function() {
-    document.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-selected'}));
+    broker.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-selected'}));
 };
 
 const deleteCompletedOnClick = function() {
-    document.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-completed'}));
+    broker.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-completed'}));
 };
 
 export { TodoActionBar };

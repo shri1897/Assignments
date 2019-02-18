@@ -1,4 +1,5 @@
 import { View } from './View.js';
+import {broker} from './broker.js';
 
 function TodoListItem(todoText) {
     this.id = new Date().getTime();
@@ -42,7 +43,7 @@ const listItemElementOnClick = function (event, listItem) {
             }
         case 'delete-item':
             {
-                document.dispatchEvent(new CustomEvent('deleteTodoListItem', {detail: listItem}));
+                broker.dispatchEvent(new CustomEvent('deleteTodoListItem', {detail: listItem}));
                 event.currentTarget.remove();
                 break;
             }
