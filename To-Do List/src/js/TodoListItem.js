@@ -10,47 +10,44 @@ function TodoListItem(todoID, todoText, todoStatus, todoChecked) {
 TodoListItem.prototype = Object.create(View.prototype);
 TodoListItem.prototype.constructor = TodoListItem;
 
-TodoListItem.prototype.init = function (todoManagerProps) {
+TodoListItem.prototype.init = function (todoManager) {
 
-    todoManagerProps.listContainer.onclick = (event) => {
-        listContainerClickHandler(event, todoManagerProps);
+    todoManager.listContainer.onclick = (event) => {
+        listContainerClickHandler(event, todoManager);
     }
 };
 
-const listContainerClickHandler = (event, todoManagerProps) => {
-    let itemWrapper = findItemWrapper(event.target, 'todo-id'),
-        todoID = parseInt(itemWrapper.getAttribute("todo-id")),
-        clickedListItem = todoManagerProps.todoList.items.find(item => item.todoID === todoID);
+const listContainerClickHandler = (event, todoManager) => {
+    try {
+        let itemWrapper = findItemWrapper(event.target, 'todo-id'),
+            todoID = parseInt(itemWrapper.getAttribute("todo-id")),
+            clickedListItem = todoManager.todoList.items.find(item => item.todoID === todoID);
 
-    switch (event.target.getAttribute("todo-action")) {
-        case "select-item":
-            {
-                clickedListItem.todoChecked = event.target.checked;
-                render(clickedListItem, itemWrapper);
-                break;
-            }
-        case "mark-done":
-            {
-                clickedListItem.todoStatus = true;
-                render(clickedListItem, itemWrapper);
-                break;
-            }
-        case "delete-item":
-            {
-                let index = todoManagerProps.todoList.items.indexOf(clickedListItem);
-                todoManagerProps.deleteItem('delete-index', index)
-                break;
-            }
+        switch (event.target.getAttribute("todo-action")) {
+            case "select-item":
+                {
+                    clickedListItem.todoChecked = event.target.checked;
+                    render(clickedListItem, itemWrapper);
+                    break;
+                }
+            case "mark-done":
+                {
+                    clickedListItem.todoStatus = true;
+                    render(clickedListItem, itemWrapper);
+                    break;
+                }
+            case "delete-item":
+                {
+                    let index = todoManager.todoList.items.indexOf(clickedListItem);
+                    todoManager.deleteItem('delete-index', index);
+                    break;
+                }
+        }
+    } catch(error) {
+        console.log(error.message);
     }
     event.stopPropagation();
 };
-
-const render = (todoListItem, todoListElement) => {
-    if (todoListItem.todoStatus) {
-        todoListElement.classList.add('done-class');
-    }
-    todoListElement.checked = todoListItem.todoChecked;
-}
 
 const findItemWrapper = (element, attributeName) => { //returns the closest parent element of the passed element with given Attribute
     while (element != null) {
@@ -61,6 +58,12 @@ const findItemWrapper = (element, attributeName) => { //returns the closest pare
     }
     throw new Error(`Parent element with ${attributeName} not found!`);
 
+};
+
+const render = (todoListItem, todoListElement) => {
+    if (todoListItem.todoStatus) {
+        todoListElement.classList.add('done');
+    }
 };
 
 export { TodoListItem };

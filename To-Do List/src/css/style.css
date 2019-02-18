@@ -1,46 +1,96 @@
 html {
-    background-color: rgb(124, 124, 89);
+    background-color: #303030;
 }
 
 #main-body {
     display: flex;
-    justify-content: center;
+    flex-flow: column;
+    margin: 0px;
 }
 
 /* ____________________________________________________________________*/
-
+#action-bar {
+    background-color:#189c18;
+    padding-left: 100px; 
+}
 #text-box {
+    margin-top: 3px;
     border-radius: 10px;
+    border: 2px solid black;
     text-align: center;
     width: 600px;
     height: 50px;
-    font-size: 14px;
-    background-color: #fffff1;
+    font-size: 16px;
+    background-color: #fffffff1;
+    outline: none;
 }
 ::placeholder {
-    color: #dddddd;
+    color: #bbb8b8;
 }
 
-.input-button{
-    background-color: beige;
-    color: firebrick;
-    border-radius: 28px;
+
+#btn-delete-completed{
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
     min-width: 100px;
     height: 55px;
     cursor: pointer;
+    margin: 2px;
+    outline: none;
+    font-size: 14px;
+}
+
+#btn-delete-selected{
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+    margin: 2px;
+    outline: none;
+    font-size: 14px;
+}
+#btn-add:hover, #btn-select-all:hover,
+ #btn-delete-selected:hover, #btn-delete-completed:hover {
+    color: #56ff3b;
+    background-color: #202020;
+    font-size: 14px;
 }
 #btn-add {
-    color: olive;
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+    margin: 2px;
+    outline: none;
+    font-size: 14px;
 }
 #btn-select-all {
-    color: #3974a9;
+    color: #ffffff;
+    background-color: #303030;
+    border: 1px solid black;
+    border-radius: 10px;
+    min-width: 100px;
+    height: 55px;
+    cursor: pointer;
+    outline: none;
+    font-size: 14px;
 }
+
 
 /* ____________________________________________________________________*/
 
 #list-container {
     flex-flow: column wrap;
-    margin-top: 5px;
+    background: #303030;
+    padding-left: 100px;
 }
 
 #list-container>div {
@@ -59,21 +109,68 @@ html {
 #list-container>div>.check-box {
     align-self: center;
     margin: 15px;
+    outline: none;
 
 }
-.template-list-item {
-    display: none;
-    background-color:  rgb(251, 251, 216);
-}
 .list-item {
-    background-color:  rgb(251, 251, 216);
+    display: flex;
+    border: 2px solid black;
+    width: 600px;
+    border-radius: 8px;
+    margin: 2px;
+    background-color:  rgb(190, 255, 170);
+    color: black;
 }
 
 /* ____________________________________________________________________*/
 
-.done-class {
-    background: aquamarine;
+.done {
+    display: flex;
+    border: 2px solid black;
+    width: 600px;
+    border-radius: 8px;
+    margin: 2px;
+    background-color:  rgba(190, 255, 170, 0.329);
 }
-.done-class > p {
+.done > p {
     text-decoration: line-through;
+    color: white;
+}
+.para {
+    width: 600px;
+    word-break: break-word;
+    margin-left: 5px;
+    font-size: 14px;
+}
+.check-box {
+    align-self: center;
+    padding: 10px;
+    margin: 10px;
+    outline: none;
+}
+.check-box:hover{
+    cursor: pointer;
+}
+
+.btn-done {
+    color: black;
+    background-color: #39bd39;
+    border: black;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 1px;
+    outline: none;
+}
+
+.btn-delete {
+    color: black;
+    background-color: #39bd39;
+    border-radius: 4px;
+    margin: 1px;
+}
+.btn-done:hover, .btn-delete:hover {
+    background: #189c18;
+    color: white;
+    cursor: pointer;
+    outline: none;
 }

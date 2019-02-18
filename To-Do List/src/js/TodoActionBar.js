@@ -5,51 +5,51 @@ function TodoActionBar() { };
 TodoActionBar.prototype = Object.create(View.prototype);
 TodoActionBar.prototype.constructor = TodoActionBar;
 
-TodoActionBar.prototype.init = function (todoManagerProps) {
+TodoActionBar.prototype.init = function (todoManager) {
 
-    todoManagerProps.textBox.onkeypress = (event) => {
+    todoManager.textBox.onkeypress = (event) => {
         if (event.keyCode === 13) {     //Add item If enter key pressed
-            addItemEventHandler(todoManagerProps);
+            addItemEventHandler(todoManager);
         }
     };
 
-    todoManagerProps.buttonAdd.onclick = addItemEventHandler.bind(null, todoManagerProps);
+    todoManager.buttonAdd.onclick = addItemEventHandler.bind(null, todoManager);
 
-    todoManagerProps.buttonSelectAll.onclick = selectAllClickHandler.bind(null, todoManagerProps);
+    todoManager.buttonSelectAll.onclick = selectAllClickHandler.bind(null, todoManager);
 
-    todoManagerProps.buttonDeleteSelected.onclick = deleteSelectedClickHandler.bind(null, todoManagerProps);
+    todoManager.buttonDeleteSelected.onclick = deleteSelectedClickHandler.bind(null, todoManager);
 
-    todoManagerProps.buttonDeleteCompleted.onclick = deleteCompletedClickHandler.bind(null, todoManagerProps);
+    todoManager.buttonDeleteCompleted.onclick = deleteCompletedClickHandler.bind(null, todoManager);
 };
 
-const addItemEventHandler = (todoManagerProps) => {
-    let textValue = todoManagerProps.textBox.value;
-    todoManagerProps.textBox.value = '';
-    if (textValue) {
-        todoManagerProps.addItem(textValue);
+const addItemEventHandler = (todoManager) => {
+    let todoText = todoManager.textBox.value;
+    todoManager.textBox.value = '';
+    if (todoText) {
+        todoManager.addItem(todoText);
     }
 };
 
-const selectAllClickHandler = (todoManagerProps) => {
+const selectAllClickHandler = (todoManager) => {
     var select_delesect = true,
-        firstTodoElement = todoManagerProps.todoList.items[0];
+        firstTodoElement = todoManager.todoList.items[0];
 
     if (firstTodoElement && firstTodoElement.todoChecked) {
         select_delesect = false;
     }
 
-    for (let item of todoManagerProps.todoList.items) {
+    for (let item of todoManager.todoList.items) {
         item.todoChecked = select_delesect;
     }
-    todoManagerProps.onTodoListChange();
+    todoManager.onTodoListChange();
 };
 
-const deleteSelectedClickHandler = (todoManagerProps) => {
-    todoManagerProps.deleteItem('delete-selected');
+const deleteSelectedClickHandler = (todoManager) => {
+    todoManager.deleteItem('delete-selected');
 };
 
-const deleteCompletedClickHandler = (todoManagerProps) => {
-    todoManagerProps.deleteItem('delete-completed');
+const deleteCompletedClickHandler = (todoManager) => {
+    todoManager.deleteItem('delete-completed');
 };
 
 export { TodoActionBar };

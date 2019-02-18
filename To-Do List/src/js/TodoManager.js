@@ -3,66 +3,54 @@ import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
 import { templateListItem } from './templateListItem.js';
 
-const todoList = { items: [] },
-    listContainer = document.getElementById('list-container'),
-    textBox = document.getElementById("text-box"),
-    buttonAdd = document.getElementById("btn-add"),
-    buttonSelectAll = document.getElementById("btn-select-all"),
-    buttonDeleteSelected = document.getElementById("btn-delete-selected"),
-    buttonDeleteCompleted = document.getElementById("btn-delete-completed");
-
-function TodoManager() { }
+function TodoManager() { 
+    this.todoList = { items: [] },
+    this.listContainer = document.getElementById('list-container'),
+    this.textBox = document.getElementById("text-box"),
+    this.buttonAdd = document.getElementById("btn-add"),
+    this.buttonSelectAll = document.getElementById("btn-select-all"),
+    this.buttonDeleteSelected = document.getElementById("btn-delete-selected"),
+    this.buttonDeleteCompleted = document.getElementById("btn-delete-completed");
+}
 
 TodoManager.prototype = Object.create(View.prototype);
 TodoManager.prototype.constructor = TodoManager;
 
 TodoManager.prototype.init = function () {
-    const props = {
-        todoList: todoList,
-        listContainer: listContainer,
-        textBox: textBox,
-        buttonAdd: buttonAdd,
-        buttonSelectAll: buttonSelectAll,
-        buttonDeleteSelected: buttonDeleteSelected,
-        buttonDeleteCompleted: buttonDeleteCompleted,
-        addItem: this.addItem.bind(this),
-        deleteItem: this.deleteItem.bind(this),
-        onTodoListChange: this.onTodoListChange.bind(this)
-    }
     this.todoListItem = new TodoListItem();
     this.todoActionBar = new TodoActionBar();
-    this.todoActionBar.init(props);
-    this.todoListItem.init(props);
+    this.todoActionBar.init(this);
+    this.todoListItem.init(this);
 };
 
 TodoManager.prototype.addItem = function (textValue) {
     let todoID = new Date().getTime(),  //todoID <- TimeStamp 
         newListItem = new TodoListItem(todoID, textValue);
 
-    todoList.items.push(newListItem);
+    this.todoList.items.push(newListItem);
     this.onTodoListChange();
 };
 
 TodoManager.prototype.deleteItem = function (switchAction, index) {
     switch (switchAction) {  // todoList needs to be updated. So, using Splice instead of Slice.
         case 'delete-selected': {
-            for (let i = todoList.items.length - 1; i >= 0; i--) {
-                if (todoList.items[i].todoChecked) {
-                    todoList.items.splice(i, 1);
+            for (let i = this.todoList.items.length - 1; i >= 0; i--) {
+                if (this.todoList.items[i].todoChecked) {
+                    this.todoList.items.splice(i, 1);
                 }
             }
             break;
         }
         case 'delete-completed': {
-            for (let i = todoList.items.length - 1; i >= 0; i--) {
-                if (todoList.items[i].todoStatus) {
-                    todoList.items.splice(i, 1);
+            for (let i = this.todoList.items.length - 1; i >= 0; i--) {
+                if (this.todoList.items[i].todoStatus) {
+                    this.todoList.items.splice(i, 1);
                 }
             }
             break;
         }
         case 'delete-index': {
-            todoList.items.splice(index, 1);
+            this.todoList.items.splice(index, 1);
             break;
         }
     }
@@ -70,12 +58,13 @@ TodoManager.prototype.deleteItem = function (switchAction, index) {
 };
 
 TodoManager.prototype.onTodoListChange = function () {
-    this.render();
+    render(this);
 };
 
-TodoManager.prototype.render = function () {
-    let todoListHTML = Mustache.to_html(templateListItem, todoList);
-    listContainer.innerHTML = todoListHTML;
+const render = function (todoManager) {
+    console.log(todoManager.todoList);
+    let todoListHTML = Mustache.to_html(templateListItem, todoManager.todoList);
+    todoManager.listContainer.innerHTML = todoListHTML;
 };
 
 export { TodoManager };
