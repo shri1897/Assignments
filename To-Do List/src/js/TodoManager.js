@@ -32,9 +32,9 @@ TodoManager.prototype.addItem = function (todoText) {
 };
 
 TodoManager.prototype.deleteItem = function (switchAction, index) {
-    switch (switchAction) {  // todoList needs to be updated. So, using Splice instead of Slice.
+    switch (switchAction) {  // todoManager.todoList needs to be updated. So, using Splice instead of Slice.
         case 'delete-selected': {
-            for (let i = this.todoList.items.length - 1; i >= 0; i--) {
+            for (let i = this.todoList.items.length - 1; i >= 0; i -= 1) {
                 if (this.todoList.items[i].todoChecked) {
                     this.todoList.items.splice(i, 1);
                 }
@@ -42,7 +42,7 @@ TodoManager.prototype.deleteItem = function (switchAction, index) {
             break;
         }
         case 'delete-completed': {
-            for (let i = this.todoList.items.length - 1; i >= 0; i--) {
+            for (let i = this.todoList.items.length - 1; i >= 0; i -= 1) {
                 if (this.todoList.items[i].todoStatus) {
                     this.todoList.items.splice(i, 1);
                 }
