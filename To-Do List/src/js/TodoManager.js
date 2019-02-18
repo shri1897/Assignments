@@ -23,9 +23,9 @@ TodoManager.prototype.init = function () {
     this.todoListItem.init(this);
 };
 
-TodoManager.prototype.addItem = function (textValue) {
+TodoManager.prototype.addItem = function (todoText) {
     let todoID = new Date().getTime(),  //todoID <- TimeStamp 
-        newListItem = new TodoListItem(todoID, textValue);
+        newListItem = new TodoListItem(todoID, todoText);
 
     this.todoList.items.push(newListItem);
     this.onTodoListChange();
