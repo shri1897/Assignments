@@ -3,53 +3,44 @@ import { View } from './View.js';
 function TodoActionBar() { };
 
 TodoActionBar.prototype = Object.create(View.prototype);
+
 TodoActionBar.prototype.constructor = TodoActionBar;
 
-TodoActionBar.prototype.init = function (todoManager) {
+TodoActionBar.prototype.init = function () {
 
-    todoManager.textBox.onkeypress = (event) => {
-        if (event.keyCode === 13) {     //Add item If enter key pressed
-            addItemEventHandler(todoManager);
+    document.getElementById('text-box').onkeypress = function(event) {
+        if (event.keyCode === 13) { 
+            addItemOnClick();
         }
     };
 
-    todoManager.buttonAdd.onclick = addItemEventHandler.bind(null, todoManager);
+    document.getElementById('btn-add').onclick = addItemOnClick;
 
-    todoManager.buttonSelectAll.onclick = selectAllClickHandler.bind(null, todoManager);
+    document.getElementById('btn-select-all').onclick = selectAllOnClick;
 
-    todoManager.buttonDeleteSelected.onclick = deleteSelectedClickHandler.bind(null, todoManager);
+    document.getElementById('btn-delete-selected').onclick = deleteSelectedOnClick;
 
-    todoManager.buttonDeleteCompleted.onclick = deleteCompletedClickHandler.bind(null, todoManager);
+    document.getElementById('btn-delete-completed').onclick = deleteCompletedOnClick;
 };
 
-const addItemEventHandler = (todoManager) => {
-    let todoText = todoManager.textBox.value;
-    todoManager.textBox.value = '';
+const addItemOnClick = function(){
+    let todoText = document.getElementById('text-box').value;
+    document.getElementById('text-box').value = '';
     if (todoText) {
-        todoManager.addItem(todoText);
+        document.dispatchEvent(new CustomEvent('addItem', {detail: todoText}));
     }
 };
 
-const selectAllClickHandler = (todoManager) => {
-    var select_delesect = true,
-        firstTodoElement = todoManager.todoList.items[0];
-
-    if (firstTodoElement && firstTodoElement.todoChecked) {
-        select_delesect = false;
-    }
-
-    for (let item of todoManager.todoList.items) {
-        item.todoChecked = select_delesect;
-    }
-    todoManager.onTodoListChange();
+const selectAllOnClick = function() {
+    document.dispatchEvent(new CustomEvent('setChecked'));
 };
 
-const deleteSelectedClickHandler = (todoManager) => {
-    todoManager.deleteItem('delete-selected');
+const deleteSelectedOnClick = function() {
+    document.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-selected'}));
 };
 
-const deleteCompletedClickHandler = (todoManager) => {
-    todoManager.deleteItem('delete-completed');
+const deleteCompletedOnClick = function() {
+    document.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-completed'}));
 };
 
 export { TodoActionBar };

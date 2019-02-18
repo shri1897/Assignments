@@ -3,68 +3,70 @@ import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
 import { templateListItem } from './templateListItem.js';
 
-function TodoManager() { 
-    this.todoList = { items: [] },
-    this.listContainer = document.getElementById('list-container'),
-    this.textBox = document.getElementById("text-box"),
-    this.buttonAdd = document.getElementById("btn-add"),
-    this.buttonSelectAll = document.getElementById("btn-select-all"),
-    this.buttonDeleteSelected = document.getElementById("btn-delete-selected"),
-    this.buttonDeleteCompleted = document.getElementById("btn-delete-completed");
+function TodoManager() {
+    this.todoList = window.todoList = {};
 }
 
 TodoManager.prototype = Object.create(View.prototype);
 TodoManager.prototype.constructor = TodoManager;
 
 TodoManager.prototype.init = function () {
-    this.todoListItem = new TodoListItem();
     this.todoActionBar = new TodoActionBar();
-    this.todoActionBar.init(this);
-    this.todoListItem.init(this);
+    this.todoActionBar.init();
+    document.addEventListener('deleteTodoListItem', (event) => { deleteTodoListItem(event.detail, this) });
+    document.addEventListener('deleteItem', (event) => { deleteItem(event.detail, this) });
+    document.addEventListener('addItem', (event) => { addItem(event.detail, this) });
+    document.addEventListener('setChecked', setChecked.bind(this));
 };
 
-TodoManager.prototype.addItem = function (todoText) {
-    let todoID = new Date().getTime(),  //todoID <- TimeStamp 
-        newListItem = new TodoListItem(todoID, todoText);
-
-    this.todoList.items.push(newListItem);
-    this.onTodoListChange();
+const addItem = function (todoText, todoManager) {
+    let newListItem = new TodoListItem(todoText);
+    newListItem.init();
+    todoManager.todoList[newListItem.id] = newListItem;
 };
 
-TodoManager.prototype.deleteItem = function (switchAction, index) {
-    switch (switchAction) {  // todoManager.todoList needs to be updated. So, using Splice instead of Slice.
-        case 'delete-selected': {
-            for (let i = this.todoList.items.length - 1; i >= 0; i -= 1) {
-                if (this.todoList.items[i].todoChecked) {
-                    this.todoList.items.splice(i, 1);
+const deleteItem = function (switchAction, todoManager) {
+    switch (switchAction) {  
+        case 'delete-selected':
+            {
+                for(let todoID in todoManager.todoList) {
+                    if(todoManager.todoList[todoID].checked) {
+                        todoManager.todoList[todoID].deleteItem();
+                        delete todoManager.todoList[todoID];
+                    }
                 }
+                break;
             }
-            break;
-        }
-        case 'delete-completed': {
-            for (let i = this.todoList.items.length - 1; i >= 0; i -= 1) {
-                if (this.todoList.items[i].todoStatus) {
-                    this.todoList.items.splice(i, 1);
+        case 'delete-completed':
+            {
+                for(let todoID in todoManager.todoList) {
+                    if(todoManager.todoList[todoID].status) {
+                        todoManager.todoList[todoID].deleteItem();
+                        delete todoManager.todoList[todoID];
+                    }
                 }
+                break;
             }
-            break;
-        }
-        case 'delete-index': {
-            this.todoList.items.splice(index, 1);
-            break;
+    }
+};
+
+const setChecked = function () { //// this <==> todoManager
+    var check = true;
+    if(this.todoList[Object.keys(this.todoList)[0]] && this.todoList[Object.keys(this.todoList)[0]].checked) {
+        check = false;
+    }
+    for(let todoID in this.todoList) {
+        this.todoList[todoID].setChecked(check);
+    }
+}
+
+const deleteTodoListItem = function (listItem, todoManager) {
+    for(let todoID in todoManager.todoList) {
+        if(todoManager.todoList[todoID]==listItem) {
+           delete todoManager.todoList[todoID];
+           break;
         }
     }
-    this.onTodoListChange();
-};
-
-TodoManager.prototype.onTodoListChange = function () {
-    render(this);
-};
-
-const render = function (todoManager) {
-    console.log(todoManager.todoList);
-    let todoListHTML = Mustache.to_html(templateListItem, todoManager.todoList);
-    todoManager.listContainer.innerHTML = todoListHTML;
-};
+}
 
 export { TodoManager };
