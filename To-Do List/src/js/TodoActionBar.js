@@ -11,11 +11,11 @@ TodoActionBar.prototype.init = function () {
 
     document.getElementById('text-box').onkeypress = function (event) {
         if (event.keyCode === 13) {
-            addItemOnClick();
+            addItemOnEvent();
         }
     };
 
-    document.getElementById('btn-add').onclick = addItemOnClick;
+    document.getElementById('btn-add').onclick = addItemOnEvent;
 
     document.getElementById('btn-select-all').onclick = selectAllOnClick;
 
@@ -24,7 +24,7 @@ TodoActionBar.prototype.init = function () {
     document.getElementById('btn-delete-completed').onclick = deleteCompletedOnClick;
 };
 
-const addItemOnClick = function () {
+const addItemOnEvent = function () {
     let todoText = document.getElementById('text-box').value;
     document.getElementById('text-box').value = '';
     if (todoText) {
