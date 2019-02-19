@@ -1,10 +1,11 @@
 import { View } from './View.js'
 import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
-import {broker} from './broker.js';
+import { brokerTodoManager } from './brokerTodoManager.js';
 
 function TodoManager() {
-    this.todoList = window.todoList = {};
+    this.todoList = {};
+    this.todoElementList = {};
 }
 
 TodoManager.prototype = Object.create(View.prototype);
@@ -13,34 +14,36 @@ TodoManager.prototype.constructor = TodoManager;
 TodoManager.prototype.init = function () {
     this.todoActionBar = new TodoActionBar();
     this.todoActionBar.init();
-    broker.addEventListener('deleteTodoListItem', (event) => { deleteTodoListItem(event.detail, this) });
-    broker.addEventListener('deleteItem', (event) => { deleteItem(event.detail, this) });
-    broker.addEventListener('addItem', (event) => { addItem(event.detail, this) });
-    broker.addEventListener('setChecked', setChecked.bind(this));
+    brokerTodoManager.addEventListener('deleteItem', (event) => { deleteItem(event.detail, this) });
+    brokerTodoManager.addEventListener('deleteMultipleItems', (event) => { deleteMultipleItems(event.detail, this) });
+    brokerTodoManager.addEventListener('addItem', (event) => { addItem(event.detail, this) });
+    brokerTodoManager.addEventListener('setChecked', setChecked.bind(this));
 };
 
 const addItem = function (todoText, todoManager) {
-    let newListItem = new TodoListItem(todoText);
-    newListItem.init();
-    todoManager.todoList[newListItem.id] = newListItem;
+    let newTodoItem = new TodoListItem(todoText);
+    let newTodoItemElement = newTodoItem.createItemElement();
+
+    todoManager.todoList[newTodoItem.id] = newTodoItem;
+    todoManager.todoElementList[newTodoItem.id] = newTodoItemElement;
+    render(todoManager.todoElementList);
 };
 
-const deleteItem = function (switchAction, todoManager) {
-    switch (switchAction) {  
+const deleteMultipleItems = function (switchAction, todoManager) {
+    switch (switchAction) {
         case 'delete-selected':
             {
-                for(let todoID in todoManager.todoList) {
-                    if(todoManager.todoList[todoID].checked) {
+                for (let todoID in todoManager.todoList) {
+                    if (todoManager.todoList[todoID].checked) {
                         todoManager.todoList[todoID].deleteItem();
-                        delete todoManager.todoList[todoID];
                     }
                 }
                 break;
             }
         case 'delete-completed':
             {
-                for(let todoID in todoManager.todoList) {
-                    if(todoManager.todoList[todoID].status) {
+                for (let todoID in todoManager.todoList) {
+                    if (todoManager.todoList[todoID].status) {
                         todoManager.todoList[todoID].deleteItem();
                         delete todoManager.todoList[todoID];
                     }
@@ -52,20 +55,25 @@ const deleteItem = function (switchAction, todoManager) {
 
 const setChecked = function () { //// this <==> todoManager
     var check = true;
-    if(this.todoList[Object.keys(this.todoList)[0]] && this.todoList[Object.keys(this.todoList)[0]].checked) {
+    if (this.todoList[Object.keys(this.todoList)[0]] && this.todoList[Object.keys(this.todoList)[0]].checked) {
         check = false;
     }
-    for(let todoID in this.todoList) {
+    for (let todoID in this.todoList) {
         this.todoList[todoID].setChecked(check);
     }
 }
 
-const deleteTodoListItem = function (listItem, todoManager) {
-    for(let todoID in todoManager.todoList) {
-        if(todoManager.todoList[todoID]==listItem) {
-           delete todoManager.todoList[todoID];
-           break;
-        }
+const deleteItem = function (todoID, todoManager) {
+    delete todoManager.todoList[todoID];
+    delete todoManager.todoElementList[todoID];
+    render(todoManager.todoElementList);
+}
+
+const render = function (todoElementList) {
+    let listContainer = document.getElementById('list-container');
+    listContainer.innerHTML = '';
+    for (let todoID in todoElementList) {
+        listContainer.appendChild(todoElementList[todoID]);
     }
 }
 

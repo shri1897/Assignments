@@ -1,8 +1,8 @@
 import { View } from './View.js';
-import {broker} from './broker.js';
+import { brokerTodoManager } from './brokerTodoManager.js';
 
 function TodoListItem(todoText) {
-    this.id = new Date().getTime();
+    this.id = new Date().getTime();  // ID <---- TimeStamp.
     this.text = todoText;
     this.status = false;
     this.checked = false;
@@ -12,22 +12,31 @@ TodoListItem.prototype = Object.create(View.prototype);
 
 TodoListItem.prototype.constructor = TodoListItem;
 
-TodoListItem.prototype.init = function () {
-    createItem(this);
-    let listItemElement = document.querySelector(`[todo-id='${this.id}']`);
-    listItemElement.onclick = (event) =>{listItemElementOnClick(event, this);};
-};
+TodoListItem.prototype.createItemElement = function () {
+    var newTodoItemElement = document.querySelector('.template').cloneNode(true);
+
+    newTodoItemElement.classList.remove('template');
+    newTodoItemElement.setAttribute('todo-id', this.id);
+    newTodoItemElement.querySelector('.check-box').checked = this.checked;
+    newTodoItemElement.querySelector('.todo-text').textContent = this.text;
+    if (this.status) {
+        newTodoItemElement.classList.add('done');
+    }
+    newTodoItemElement.onclick = (event) => { todoItemElementOnClick(event, this); };
+
+    return newTodoItemElement;
+}
 
 TodoListItem.prototype.deleteItem = function () {
-    let listItemElement = document.querySelector(`[todo-id='${this.id}']`);
-    listItemElement.remove();
+    brokerTodoManager.dispatchEvent(new CustomEvent('deleteItem', { detail: this.id }));
 };
 
 TodoListItem.prototype.setChecked = function (check) {
     this.checked = check;
     render(this);
-}
-const listItemElementOnClick = function (event, listItem) {
+};
+
+const todoItemElementOnClick = function (event, listItem) {
     switch (event.target.getAttribute('todo-action')) {
         case 'select-item':
             {
@@ -43,24 +52,10 @@ const listItemElementOnClick = function (event, listItem) {
             }
         case 'delete-item':
             {
-                broker.dispatchEvent(new CustomEvent('deleteTodoListItem', {detail: listItem}));
-                event.currentTarget.remove();
+                brokerTodoManager.dispatchEvent(new CustomEvent('deleteItem', { detail: listItem.id }));
                 break;
             }
     }
-};
-
-const createItem = function (listItem) {
-    var newListItemElement = document.querySelector('.template').cloneNode(true);
-
-    newListItemElement.classList.remove('template');
-    newListItemElement.setAttribute('todo-id', listItem.id);
-    newListItemElement.querySelector('.check-box').checked = listItem.checked;
-    newListItemElement.querySelector('.todo-text').textContent = listItem.text;
-    if (listItem.status) {
-        newListItemElement.classList.add('done');
-    }
-    document.getElementById('list-container').appendChild(newListItemElement);
 };
 
 const render = function (listItem) {

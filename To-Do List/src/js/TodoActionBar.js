@@ -1,5 +1,5 @@
 import { View } from './View.js';
-import {broker} from './broker.js';
+import { brokerTodoManager } from './brokerTodoManager.js';
 
 function TodoActionBar() { };
 
@@ -9,8 +9,8 @@ TodoActionBar.prototype.constructor = TodoActionBar;
 
 TodoActionBar.prototype.init = function () {
 
-    document.getElementById('text-box').onkeypress = function(event) {
-        if (event.keyCode === 13) { 
+    document.getElementById('text-box').onkeypress = function (event) {
+        if (event.keyCode === 13) {
             addItemOnClick();
         }
     };
@@ -24,24 +24,24 @@ TodoActionBar.prototype.init = function () {
     document.getElementById('btn-delete-completed').onclick = deleteCompletedOnClick;
 };
 
-const addItemOnClick = function(){
+const addItemOnClick = function () {
     let todoText = document.getElementById('text-box').value;
     document.getElementById('text-box').value = '';
     if (todoText) {
-        broker.dispatchEvent(new CustomEvent('addItem', {detail: todoText}));
+        brokerTodoManager.dispatchEvent(new CustomEvent('addItem', { detail: todoText }));
     }
 };
 
-const selectAllOnClick = function() {
-    broker.dispatchEvent(new CustomEvent('setChecked'));
+const selectAllOnClick = function () {
+    brokerTodoManager.dispatchEvent(new CustomEvent('setChecked'));
 };
 
-const deleteSelectedOnClick = function() {
-    broker.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-selected'}));
+const deleteSelectedOnClick = function () {
+    brokerTodoManager.dispatchEvent(new CustomEvent('deleteMultipleItems', { detail: 'delete-selected' }));
 };
 
-const deleteCompletedOnClick = function() {
-    broker.dispatchEvent(new CustomEvent('deleteItem', {detail: 'delete-completed'}));
+const deleteCompletedOnClick = function () {
+    brokerTodoManager.dispatchEvent(new CustomEvent('deleteMultipleItems', { detail: 'delete-completed' }));
 };
 
 export { TodoActionBar };
