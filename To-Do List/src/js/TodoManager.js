@@ -1,7 +1,7 @@
 import { View } from './View.js'
 import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
-import { brokerTodoManager } from './brokerTodoManager.js';
+import { brokerTodoManager } from './broker-todo-manager.js';
 
 function TodoManager() {
     this.todoList = {};
@@ -35,7 +35,8 @@ const deleteMultipleItems = function (switchAction, todoManager) {
             {
                 for (let todoID in todoManager.todoList) {
                     if (todoManager.todoList[todoID].checked) {
-                        todoManager.todoList[todoID].deleteItem();
+                        delete todoManager.todoList[todoID];
+                        delete todoManager.todoElementList[todoID];
                     }
                 }
                 break;
@@ -44,13 +45,14 @@ const deleteMultipleItems = function (switchAction, todoManager) {
             {
                 for (let todoID in todoManager.todoList) {
                     if (todoManager.todoList[todoID].status) {
-                        todoManager.todoList[todoID].deleteItem();
                         delete todoManager.todoList[todoID];
+                        delete todoManager.todoElementList[todoID];
                     }
                 }
                 break;
             }
     }
+    render(todoManager.todoElementList);
 };
 
 const setChecked = function () { //// this <==> todoManager
