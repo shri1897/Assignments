@@ -6,26 +6,26 @@ function TodoListItem(todoText) {
     this.text = todoText;
     this.status = false;
     this.checked = false;
-}
+};
 
 TodoListItem.prototype = Object.create(View.prototype);
 
 TodoListItem.prototype.constructor = TodoListItem;
 
-TodoListItem.prototype.createItemElement = function () {
-    var newTodoItemElement = document.querySelector('.template').cloneNode(true);
+TodoListItem.prototype.createTodoElement = function () {
+    var newTodoElement = document.querySelector('.template').cloneNode(true);
 
-    newTodoItemElement.classList.remove('template');
-    newTodoItemElement.setAttribute('todo-id', this.id);
-    newTodoItemElement.querySelector('.check-box').checked = this.checked;
-    newTodoItemElement.querySelector('.todo-text').textContent = this.text;
+    newTodoElement.classList.remove('template');
+    newTodoElement.setAttribute('todo-id', this.id);
+    newTodoElement.querySelector('.check-box').checked = this.checked;
+    newTodoElement.querySelector('.todo-text').textContent = this.text;
     if (this.status) {
-        newTodoItemElement.classList.add('done');
+        newTodoElement.classList.add('done');
     }
-    newTodoItemElement.onclick = (event) => { todoItemElementOnClick(event, this); };
+    newTodoElement.onclick = (event) => { todoElementOnClick(event, this); };
 
-    return newTodoItemElement;
-}
+    return newTodoElement;
+};
 
 TodoListItem.prototype.deleteItem = function () {
     brokerTodoManager.dispatchEvent(new CustomEvent('deleteItem', { detail: this.id }));
@@ -36,7 +36,7 @@ TodoListItem.prototype.setChecked = function (check) {
     render(this);
 };
 
-const todoItemElementOnClick = function (event, listItem) {
+const todoElementOnClick = function (event, listItem) {
     switch (event.target.getAttribute('todo-action')) {
         case 'select-item':
             {
@@ -59,12 +59,12 @@ const todoItemElementOnClick = function (event, listItem) {
 };
 
 const render = function (listItem) {
-    var listItemElement = document.querySelector(`[todo-id='${listItem.id}']`);
+    var todoElement = document.querySelector(`[todo-id='${listItem.id}']`);
 
-    listItemElement.querySelector('.check-box').checked = listItem.checked;
-    listItemElement.querySelector('.todo-text').textContent = listItem.text;
+    todoElement.querySelector('.check-box').checked = listItem.checked;
+    todoElement.querySelector('.todo-text').textContent = listItem.text;
     if (listItem.status) {
-        listItemElement.classList.add('done');
+        todoElement.classList.add('done');
     }
 };
 

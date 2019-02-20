@@ -6,7 +6,7 @@ import { brokerTodoManager } from './broker-todo-manager.js';
 function TodoManager() {
     this.todoList = {};
     this.todoElementList = {};
-}
+};
 
 TodoManager.prototype = Object.create(View.prototype);
 TodoManager.prototype.constructor = TodoManager;
@@ -21,11 +21,11 @@ TodoManager.prototype.init = function () {
 };
 
 const addItem = function (todoText, todoManager) {
-    let newTodoItem = new TodoListItem(todoText);
-    let newTodoItemElement = newTodoItem.createItemElement();
+    var newTodoItem = new TodoListItem(todoText),
+        newTodoElement = newTodoItem.createTodoElement();
 
     todoManager.todoList[newTodoItem.id] = newTodoItem;
-    todoManager.todoElementList[newTodoItem.id] = newTodoItemElement;
+    todoManager.todoElementList[newTodoItem.id] = newTodoElement;
     render(todoManager.todoElementList);
 };
 
@@ -63,20 +63,20 @@ const setChecked = function () { //// this <==> todoManager
     for (let todoID in this.todoList) {
         this.todoList[todoID].setChecked(check);
     }
-}
+};
 
 const deleteItem = function (todoID, todoManager) {
     delete todoManager.todoList[todoID];
     delete todoManager.todoElementList[todoID];
     render(todoManager.todoElementList);
-}
+};
 
 const render = function (todoElementList) {
-    let listContainer = document.getElementById('list-container');
+    var listContainer = document.getElementById('list-container');
     listContainer.innerHTML = '';
     for (let todoID in todoElementList) {
         listContainer.appendChild(todoElementList[todoID]);
     }
-}
+};
 
 export { TodoManager };

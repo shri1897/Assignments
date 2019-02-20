@@ -1,6 +1,6 @@
 import {TodoManager} from './TodoManager'
 
 (function todoMain() {
-    const todoManager = new TodoManager();
+    var todoManager = new TodoManager();
     todoManager.init();
 })();

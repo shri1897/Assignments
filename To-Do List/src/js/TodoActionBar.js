@@ -25,7 +25,7 @@ TodoActionBar.prototype.init = function () {
 };
 
 const addItemOnEvent = function () {
-    let todoText = document.getElementById('text-box').value;
+    var todoText = document.getElementById('text-box').value;
     document.getElementById('text-box').value = '';
     if (todoText) {
         brokerTodoManager.dispatchEvent(new CustomEvent('addItem', { detail: todoText }));
