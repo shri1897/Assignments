@@ -1,7 +1,6 @@
 import {TodoManager} from './TodoManager'
 
-(function main() {
-    "use strict";
+(function todoMain() {
     const todoManager = new TodoManager();
     todoManager.init();
 })();
