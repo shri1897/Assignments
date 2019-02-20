@@ -14,6 +14,7 @@ TodoManager.prototype.constructor = TodoManager;
 TodoManager.prototype.init = function () {
     this.todoActionBar = new TodoActionBar();
     this.todoActionBar.init();
+    
     brokerTodoManager.addEventListener('deleteItem', (event) => { deleteItem(event.detail, this) });
     brokerTodoManager.addEventListener('deleteMultipleItems', (event) => { deleteMultipleItems(event.detail, this) });
     brokerTodoManager.addEventListener('addItem', (event) => { addItem(event.detail, this) });
