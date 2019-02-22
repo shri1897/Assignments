@@ -1,4 +1,4 @@
-const templateTodoItem =
+const todoItemTemplate =
 `
     <div class="list-item {{#status}}done{{/status}}" todo-id="{{id}}">
         <input type="checkbox" class="check-box" todo-action="select-item" {{#checked}}checked{{/checked}}>
@@ -7,4 +7,4 @@ const templateTodoItem =
         <button class="btn-delete" todo-action="delete-item">Delete</button>
     </div>
 `;
-export { templateTodoItem };
+export { todoItemTemplate };

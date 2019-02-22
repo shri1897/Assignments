@@ -1,6 +1,6 @@
 import { View } from './View.js';
 import { brokerTodoManager } from './broker-todo-manager.js';
-import { templateTodoItem } from './template-todo-item.js';
+import { todoItemTemplate } from './todo-item-template.js.js';
 
 function TodoListItem(todoText) {
     this.id = new Date().getTime();  // ID <---- TimeStamp.
@@ -15,7 +15,7 @@ TodoListItem.prototype.constructor = TodoListItem;
 
 TodoListItem.prototype.createTodoElement = function () {
     var newTodoElement = document.createElement('div');
-    newTodoElement.innerHTML = Mustache.render(templateTodoItem, this);
+    newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
     newTodoElement.onclick = todoElementOnClick.bind(this);
     return newTodoElement;
 };
@@ -54,7 +54,7 @@ const todoElementOnClick = function (event) {
 
 const render = function (listItem) {
     var todoElement = document.querySelector(`[todo-id='${listItem.id}']`);
-    todoElement.outerHTML = Mustache.render(templateTodoItem, listItem);
+    todoElement.outerHTML = Mustache.render(todoItemTemplate, listItem);
 };
 
 export { TodoListItem };
