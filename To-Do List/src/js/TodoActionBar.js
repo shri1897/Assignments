@@ -28,7 +28,8 @@ const addItemOnEvent = function () {
     var todoText = document.getElementById('text-box').value;
     document.getElementById('text-box').value = '';
     if (todoText) {
-        brokerTodoManager.dispatchEvent(new CustomEvent('addItem', { detail: todoText }));
+        let addItemEvent = new CustomEvent('addItem', { detail: { todoText: todoText} });
+        brokerTodoManager.dispatchEvent(addItemEvent);
     }
 };
 
@@ -37,11 +38,13 @@ const selectAllOnClick = function () {
 };
 
 const deleteSelectedOnClick = function () {
-    brokerTodoManager.dispatchEvent(new CustomEvent('deleteMultipleItems', { detail: 'delete-selected' }));
+    var deleteSelectedEvent = new CustomEvent('deleteMultipleItems', { detail: { todoAction: 'delete-selected'}});
+    brokerTodoManager.dispatchEvent(deleteSelectedEvent);
 };
 
 const deleteCompletedOnClick = function () {
-    brokerTodoManager.dispatchEvent(new CustomEvent('deleteMultipleItems', { detail: 'delete-completed' }));
+    var deleteCompletedEvent = new CustomEvent('deleteMultipleItems', { detail: { todoAction: 'delete-completed'} });
+    brokerTodoManager.dispatchEvent(deleteCompletedEvent);
 };
 
 export { TodoActionBar };

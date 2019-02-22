@@ -93,26 +93,6 @@ html {
     padding-left: 100px;
 }
 
-#list-container>div {
-    display: flex;
-    border: 1px solid #bbbbbb;
-    width: 600px;
-    border-radius: 8px;
-}
-
-#list-container>div>p {
-    width: 600px;
-    word-break: break-word;
-
-}
-
-#list-container>div>.check-box {
-    align-self: center;
-    margin: 15px;
-    outline: none;
-
-}
-
 .list-item {
     display: flex;
     border: 2px solid black;
@@ -123,20 +103,9 @@ html {
     color: black;
 }
 
+
 /* ____________________________________________________________________*/
 
-.done {
-    display: flex;
-    border: 2px solid black;
-    width: 600px;
-    border-radius: 8px;
-    margin: 2px;
-    background-color:  rgba(190, 255, 170, 0.329);
-}
-.done > p {
-    text-decoration: line-through;
-    color: white;
-}
 .todo-text {
     width: 600px;
     word-break: break-word;
@@ -175,6 +144,20 @@ html {
     cursor: pointer;
     outline: none;
 }
+
+.done {
+    display: flex;
+    border: 2px solid black;
+    width: 600px;
+    border-radius: 8px;
+    margin: 2px;
+    background-color:  rgba(190, 255, 170, 0.329);
+}
+.done > p {
+    text-decoration: line-through;
+    color: white;
+}
+
 .template {
     display: none;
 }

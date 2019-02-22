@@ -1,5 +1,6 @@
 import { View } from './View.js';
 import { brokerTodoManager } from './broker-todo-manager.js';
+import { templateTodoItem } from './template-todo-item.js';
 
 function TodoListItem(todoText) {
     this.id = new Date().getTime();  // ID <---- TimeStamp.
@@ -13,22 +14,15 @@ TodoListItem.prototype = Object.create(View.prototype);
 TodoListItem.prototype.constructor = TodoListItem;
 
 TodoListItem.prototype.createTodoElement = function () {
-    var newTodoElement = document.querySelector('.template').cloneNode(true);
-
-    newTodoElement.classList.remove('template');
-    newTodoElement.setAttribute('todo-id', this.id);
-    newTodoElement.querySelector('.check-box').checked = this.checked;
-    newTodoElement.querySelector('.todo-text').textContent = this.text;
-    if (this.status) {
-        newTodoElement.classList.add('done');
-    }
-    newTodoElement.onclick = (event) => { todoElementOnClick(event, this); };
-
+    var newTodoElement = document.createElement('div');
+    newTodoElement.innerHTML = Mustache.render(templateTodoItem, this);
+    newTodoElement.onclick = todoElementOnClick.bind(this);
     return newTodoElement;
 };
 
 TodoListItem.prototype.deleteItem = function () {
-    brokerTodoManager.dispatchEvent(new CustomEvent('deleteItem', { detail: this.id }));
+    var deleteItemEvent = new CustomEvent('deleteItem', { detail: { todoID: this.id } });
+    brokerTodoManager.dispatchEvent(deleteItemEvent);
 };
 
 TodoListItem.prototype.setChecked = function (check) {
@@ -36,23 +30,23 @@ TodoListItem.prototype.setChecked = function (check) {
     render(this);
 };
 
-const todoElementOnClick = function (event, listItem) {
+const todoElementOnClick = function (event) {
     switch (event.target.getAttribute('todo-action')) {
         case 'select-item':
             {
-                listItem.checked = event.target.checked;
-                render(listItem);
+                this.checked = event.target.checked;
+                render(this);
                 break;
             }
         case 'mark-done':
             {
-                listItem.status = true;
-                render(listItem);
+                this.status = true;
+                render(this);
                 break;
             }
         case 'delete-item':
             {
-                brokerTodoManager.dispatchEvent(new CustomEvent('deleteItem', { detail: listItem.id }));
+                this.deleteItem();
                 break;
             }
     }
@@ -60,12 +54,7 @@ const todoElementOnClick = function (event, listItem) {
 
 const render = function (listItem) {
     var todoElement = document.querySelector(`[todo-id='${listItem.id}']`);
-
-    todoElement.querySelector('.check-box').checked = listItem.checked;
-    todoElement.querySelector('.todo-text').textContent = listItem.text;
-    if (listItem.status) {
-        todoElement.classList.add('done');
-    }
+    todoElement.outerHTML = Mustache.render(templateTodoItem, listItem);
 };
 
 export { TodoListItem };
