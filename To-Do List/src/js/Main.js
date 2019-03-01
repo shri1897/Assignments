@@ -1,6 +1,4 @@
-import {TodoManager} from './TodoManager'
+import { TodoManager } from './TodoManager'
 
-(function todoMain() {
-    var todoManager = new TodoManager();
-    todoManager.init();
-})();
+var todoManager = new TodoManager();
+todoManager.init();

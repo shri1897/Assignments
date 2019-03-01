@@ -1,60 +1,92 @@
 import { View } from './View.js';
-import { brokerTodoManager } from './broker-todo-manager.js';
-import { todoItemTemplate } from './todo-item-template.js.js';
+import { broker } from './broker.js';
+import { todoItemTemplate } from './todo-item-template.js';
 
 function TodoListItem(todoText) {
     this.id = new Date().getTime();  // ID <---- TimeStamp.
     this.text = todoText;
     this.status = false;
     this.checked = false;
-};
+}
 
 TodoListItem.prototype = Object.create(View.prototype);
 
 TodoListItem.prototype.constructor = TodoListItem;
 
-TodoListItem.prototype.createTodoElement = function () {
+TodoListItem.prototype.render = function () {  //WRONG? - Render also adds event listener.
     var newTodoElement = document.createElement('div');
-    newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
+        newTodoElement.className = 'todo-wrapper';
+        newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
+
     newTodoElement.onclick = todoElementOnClick.bind(this);
     return newTodoElement;
 };
 
-TodoListItem.prototype.deleteItem = function () {
-    var deleteItemEvent = new CustomEvent('deleteItem', { detail: { todoID: this.id } });
-    brokerTodoManager.dispatchEvent(deleteItemEvent);
-};
-
 TodoListItem.prototype.setChecked = function (check) {
     this.checked = check;
-    render(this);
+    var todoElement = document.querySelector(`[todo-id='${this.id}']`);
+    todoElement.querySelector(`.check-box`).checked = this.checked;
+};
+
+TodoListItem.prototype.setStatus = function (status) {
+    this.status = status;
+    var todoElement = document.querySelector(`[todo-id='${this.id}']`);
+
+    if(status) {
+        todoElement.classList.add('done');
+    }else {
+        todoElement.classList.remove('done');
+    }
+};
+
+TodoListItem.prototype.delete = function () {
+    var deleteItemEvent = new CustomEvent('TodoManager::deleteItem', { detail: { todoID: this.id } });
+
+    broker.dispatchEvent(deleteItemEvent);
+    document.querySelector(`[todo-id='${this.id}']`).closest('.todo-wrapper').remove();
 };
 
 const todoElementOnClick = function (event) {
+
     switch (event.target.getAttribute('todo-action')) {
         case 'select-item':
             {
-                this.checked = event.target.checked;
-                render(this);
+                this.setChecked(event.target.checked);
                 break;
             }
         case 'mark-done':
             {
-                this.status = true;
-                render(this);
+                this.setStatus(!this.status);
                 break;
             }
         case 'delete-item':
             {
-                this.deleteItem();
+                this.delete();
                 break;
             }
     }
 };
 
-const render = function (listItem) {
-    var todoElement = document.querySelector(`[todo-id='${listItem.id}']`);
-    todoElement.outerHTML = Mustache.render(todoItemTemplate, listItem);
-};
-
 export { TodoListItem };
+
+
+// TodoListItem.prototype.createTodoElement = function () {
+//     var templateListItem = document.querySelector('.template'),
+//         newTodoElement = templateListItem.cloneNode(true);
+
+//     newTodoElement.classList.remove("template");
+//     newTodoElement.setAttribute("todo-id", `${this.id}`);
+//     newTodoElement.querySelector(`.todo-text`).textContent = this.text;
+
+//     if (this.status) {
+//         newItem.classList.add('done-class');
+//     }
+//     newTodoElement.querySelector(`[todo-action="select-item"]`).checked = this.checked;
+//     newTodoElement.onclick = todoElementOnClick.bind(this);
+//     return newTodoElement;
+// };
+
+// const render = function (listItem) {
+//     var todoElement = document.querySelector(`[todo-id='${listItem.id}']`);
+//     todoElement.outerHTML = Mustache.render(todoItemTemplate, listItem);
+// };

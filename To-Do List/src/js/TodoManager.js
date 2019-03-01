@@ -1,12 +1,11 @@
 import { View } from './View.js'
 import { TodoListItem } from './TodoListItem.js';
 import { TodoActionBar } from './TodoActionBar.js';
-import { brokerTodoManager } from './broker-todo-manager.js';  //broker for Child-Parent intermodule Communication
+import { broker } from './broker.js';  //broker for Child-Parent intermodule Communication
 
 function TodoManager() {
-    this.todoItemList = {};
-    this.todoElementList = {};
-};
+    this.todoItemMap = window.todoItemMap = {};
+}
 
 TodoManager.prototype = Object.create(View.prototype);
 
@@ -16,71 +15,61 @@ TodoManager.prototype.init = function () {
     this.todoActionBar = new TodoActionBar();
     this.todoActionBar.init();
     
-    brokerTodoManager.addEventListener('setChecked', setChecked.bind(this));
-    brokerTodoManager.addEventListener('deleteItem', deleteItem.bind(this));
-    brokerTodoManager.addEventListener('deleteMultipleItems', deleteMultipleItems.bind(this));
-    brokerTodoManager.addEventListener('addItem', addItem.bind(this));
+    broker.addEventListener('TodoManager::selectAll', selectAll.bind(this));
+    broker.addEventListener('TodoManager::deleteItem', deleteItem.bind(this));
+    broker.addEventListener('TodoManager::deleteSelected', deleteSelected.bind(this));
+    broker.addEventListener('TodoManager::deleteCompleted', deleteCompleted.bind(this));
+    broker.addEventListener('TodoManager::addItem', addItem.bind(this));
 };
 
 const addItem = function (event) {
     var newTodoItem = new TodoListItem(event.detail.todoText),
-        newTodoElement = newTodoItem.createTodoElement();
+        newTodoElement = newTodoItem.render();
 
-    this.todoItemList[newTodoItem.id] = newTodoItem;
-    this.todoElementList[newTodoItem.id] = newTodoElement;
-    render(this.todoElementList);
-};
-
-const deleteMultipleItems = function (event) {
-    switch (event.detail.todoAction) {
-        case 'delete-selected':
-            {
-                for (let todoID in this.todoItemList) {
-                    if (this.todoItemList[todoID].checked) {
-                        delete this.todoItemList[todoID];
-                        delete this.todoElementList[todoID];
-                    }
-                }
-                break;
-            }
-        case 'delete-completed':
-            {
-                for (let todoID in this.todoItemList) {
-                    if (this.todoItemList[todoID].status) {
-                        delete this.todoItemList[todoID];
-                        delete this.todoElementList[todoID];
-                    }
-                }
-                break;
-            }
-    }
-    render(this.todoElementList);
-};
-
-const setChecked = function () { //// this <==> todoManager
-    var check = true;
-
-    if (this.todoItemList[Object.keys(this.todoItemList)[0]] && this.todoItemList[Object.keys(this.todoItemList)[0]].checked) {
-        check = false;
-    }
-    for (let todoID in this.todoItemList) {
-        this.todoItemList[todoID].setChecked(check);
-    }
+    this.todoItemMap[newTodoItem.id] = newTodoItem;
+    document.getElementById('list-container').appendChild(newTodoElement);
 };
 
 const deleteItem = function (event) {
     var todoID = event.detail.todoID;
-    delete this.todoItemList[todoID];
-    delete this.todoElementList[todoID];
-    render(this.todoElementList);
+    delete this.todoItemMap[todoID];
 };
 
-const render = function (todoElementList) {
-    var listContainer = document.getElementById('list-container');
-    listContainer.innerHTML = '';
-    for (let todoID in todoElementList) {
-        listContainer.appendChild(todoElementList[todoID]);
+const deleteSelected  = function () {
+
+    for (let todoID in this.todoItemMap) {
+        if (this.todoItemMap[todoID].checked) {
+            this.todoItemMap[todoID].delete();
+        }
     }
+};
+
+const deleteCompleted  = function () {
+
+    for (let todoID in this.todoItemMap) {
+        if (this.todoItemMap[todoID].status) {
+            this.todoItemMap[todoID].delete();
+        }
+    }
+};
+
+const selectAll = function () {  //Need to rename - selectDeselectAll
+    var check = true,
+        firstListItem = this.todoItemMap[Object.keys(this.todoItemMap)[0]];
+
+    if (firstListItem && firstListItem.checked) {
+        check = false;
+    }
+
+    for (let todoID in this.todoItemMap) {
+        this.todoItemMap[todoID].setChecked(check);
+    }
+};
+
+const render = function () {
+    // Render todoManager ? ( List-Container and TodoAction Bar??)
+    // var bodyElement = document.querySelector(`body`);
+    // bodyElement.innerHTML = Mustache.render(todoItemTemplate, listItem);
 };
 
 export { TodoManager };

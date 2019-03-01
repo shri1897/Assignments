@@ -155,7 +155,11 @@ html {
 }
 .done > p {
     text-decoration: line-through;
+
     color: white;
+}
+.done > .btn-done::before {
+    content: 'Un-';
 }
 
 .template {
