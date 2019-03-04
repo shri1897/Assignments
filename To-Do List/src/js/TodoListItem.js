@@ -15,38 +15,41 @@ TodoListItem.prototype.constructor = TodoListItem;
 
 TodoListItem.prototype.render = function () {  //WRONG? - Render also adds event listener.
     var newTodoElement = document.createElement('div');
-        newTodoElement.className = 'todo-wrapper';
-        newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
+    newTodoElement.className = 'todo-wrapper';
+    newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
 
-    newTodoElement.onclick = todoElementOnClick.bind(this);
+    newTodoElement.onclick = onClickTodoElement.bind(this);
     return newTodoElement;
 };
 
 TodoListItem.prototype.setChecked = function (check) {
-    this.checked = check;
     var todoElement = document.querySelector(`[todo-id='${this.id}']`);
-    todoElement.querySelector(`.check-box`).checked = this.checked;
+    this.checked = check;
+    todoElement.querySelector(`.check-box`).checked = check;
 };
 
 TodoListItem.prototype.setStatus = function (status) {
-    this.status = status;
     var todoElement = document.querySelector(`[todo-id='${this.id}']`);
 
-    if(status) {
-        todoElement.classList.add('done');
-    }else {
-        todoElement.classList.remove('done');
-    }
+    this.status = status;
+    status ? todoElement.classList.add('done') : todoElement.classList.remove('done');
+    // if(status) {
+    //     todoElement.classList.add('done');
+    // }else {
+    //     todoElement.classList.remove('done');
+    // }
 };
 
 TodoListItem.prototype.delete = function () {
-    var deleteItemEvent = new CustomEvent('TodoManager::deleteItem', { detail: { todoID: this.id } });
+    var deleteItemEvent = new CustomEvent('TodoManager:deleteMapItem', {
+        detail: { todoID: this.id }
+    });
 
     broker.dispatchEvent(deleteItemEvent);
-    document.querySelector(`[todo-id='${this.id}']`).closest('.todo-wrapper').remove();
+    document.querySelector(`[todo-id='${this.id}']`).closest('.todo-wrapper').remove();       //Split into two lines??
 };
 
-const todoElementOnClick = function (event) {
+const onClickTodoElement = function (event) {
 
     switch (event.target.getAttribute('todo-action')) {
         case 'select-item':
@@ -68,6 +71,28 @@ const todoElementOnClick = function (event) {
 };
 
 export { TodoListItem };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // TodoListItem.prototype.createTodoElement = function () {

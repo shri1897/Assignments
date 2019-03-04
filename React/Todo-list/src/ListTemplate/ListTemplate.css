@@ -20,6 +20,9 @@
     text-decoration: line-through;
     color: white;
 }
+.done-class > .btn-done::before{
+    content: 'Un-';
+}
 .para {
     width: 600px;
     word-break: break-word;

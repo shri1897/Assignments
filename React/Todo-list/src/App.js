@@ -67,7 +67,7 @@ class App extends Component {
 
   buttonDoneClickHandler = (event) => {
     let id = event.target.parentElement.getAttribute('todo-id');
-    this.state.listOfObjects[id].status = true;
+    this.state.listOfObjects[id].status = !this.state.listOfObjects[id].status;
     this.setState(this.state);
   }
 
