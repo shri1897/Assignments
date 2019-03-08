@@ -1,22 +1,57 @@
 import React from 'react'
-import '../css/TodoActionBar.css'
+import PropTypes from 'prop-types';
+import styles from '../css/TodoActionBar.module.css'
 
-const TodoActionBar = function(props) {
-        function addItemOnEnterKeyPress(event) {
-            if(event.which === 13) {
-                props.addItem();
-            }
-        } 
-
-        return (
-            <div className="action-bar">
-                <input className="text-box" type="text" placeholder="Write something to add" value={props.textValue} onChange={props.handleInputTextChange} onKeyPress={addItemOnEnterKeyPress}/>
-                <button className="btn-add" onClick={props.addItem}>Add</button>
-                <button className="btn-select-all" onClick={props.selectDeselectAll}>Select/Deselect All</button>
-                <button className="btn-delete-selected" onClick={props.deleteSelected}>Delete Selected</button>
-                <button className="btn-delete-completed" onClick={props.deleteCompleted}>Delete Completed</button>
-            </div>
-        );
+const propTypes = {
+    textValue: PropTypes.string.isRequired,
+    handleInputTextChange: PropTypes.func.isRequired,
+    addItem: PropTypes.func.isRequired,
+    deleteSelected: PropTypes.func.isRequired,
+    deleteCompleted: PropTypes.func.isRequired,
+    selectDeselectAll: PropTypes.func.isRequired
 }
 
-export default TodoActionBar;
+function TodoActionBar(props) {
+    function addItemOnEnterKeyPress(event) {
+        if (event.which === 13) {
+            props.addItem();
+        }
+    }
+
+    return (
+        <div className={styles["action-bar"]}>
+            <input
+                type="text"
+                className={styles["text-box"]}
+                placeholder="Write something to add"
+                value={props.textValue}
+                onChange={props.handleInputTextChange}
+                onKeyPress={addItemOnEnterKeyPress}
+            />
+            <button
+                className={styles["btn-add"]}
+                onClick={props.addItem}>
+                Add
+            </button>
+            <button
+                className={styles["btn-select-deselect-all"]}
+                onClick={props.selectDeselectAll}>
+                Select/Deselect All
+            </button>
+            <button
+                className={styles["btn-delete-selected"]}
+                onClick={props.deleteSelected}>
+                Delete Selected
+            </button>
+            <button
+                className={styles["btn-delete-completed"]}
+                onClick={props.deleteCompleted}>
+                Delete Completed
+            </button>
+        </div>
+    );
+}
+
+TodoActionBar.propTypes = propTypes;
+
+export default React.memo(TodoActionBar);

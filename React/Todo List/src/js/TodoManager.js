@@ -1,16 +1,29 @@
 import React from 'react';
-import '../css/TodoManager.css'
 import TodoActionBar from './TodoActionBar'
-import ListContainer from './ListContainer'
+import TodoListContainer from './TodoListContainer'
+import styles from '../css/TodoManager.module.css'
 
 class TodoManager extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.addItem = this.addItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+        this.selectDeselectAll = this.selectDeselectAll.bind(this);
+        this.deleteSelected = this.deleteSelected.bind(this);
+        this.deleteCompleted = this.deleteCompleted.bind(this);
+        this.handleInputTextChange = this.handleInputTextChange.bind(this);
+        this.handleCheckedStatusChange = this.handleCheckedStatusChange.bind(this);
+        this.handleCompletedStatusChange = this.handleCompletedStatusChange.bind(this);
+    }
 
     state = {
         todoItems: [],
         todoInputTextValue: ''
     };
 
-    addItem = () => {
+    addItem() {
         let todoItems = this.state.todoItems.slice();
         let todoText = this.state.todoInputTextValue;
         if (todoText) {
@@ -20,28 +33,28 @@ class TodoManager extends React.Component {
         }
     }
 
-    deleteItem = (event) => {
+    deleteItem(event) {
         let todoItems = this.state.todoItems.slice();
-        let itemID = parseInt(event.target.closest('.list-item').getAttribute('todo-id'));
+        let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
         todoItems = todoItems.filter(item => {
-            return item.todoID !==  itemID;
+            return item.todoID !== itemID;
         });
-        this.setState({todoItems: todoItems})
+        this.setState({ todoItems: todoItems })
     }
 
-    selectDeselectAll = () => {
+    selectDeselectAll() {
         let todoItems = this.state.todoItems.slice();
         if (todoItems[0]) {
             let check = !todoItems[0].checkedStatus;
-            todoItems.map((item)=>{
+            todoItems.map((item) => {
                 item.checkedStatus = check;
                 return true;
             });
-            this.setState({todoItems:todoItems})
+            this.setState({ todoItems: todoItems })
         }
     }
 
-    deleteSelected = () => {
+    deleteSelected() {
         let todoItems = this.state.todoItems.slice();
         todoItems = todoItems.filter((item) => {
             return !item.checkedStatus;
@@ -49,7 +62,7 @@ class TodoManager extends React.Component {
         this.setState({ todoItems: todoItems });
     }
 
-    deleteCompleted = () => {
+    deleteCompleted() {
         let todoItems = this.state.todoItems.slice();
         todoItems = todoItems.filter((item) => {
             return !item.completedStatus;
@@ -57,50 +70,50 @@ class TodoManager extends React.Component {
         this.setState({ todoItems: todoItems });
     }
 
-    handleInputTextChange = (event) => {
+    handleInputTextChange(event) {
         this.setState({ todoInputTextValue: event.target.value });
     }
 
-    handleCheckedStatusChange = (event) => {
+    handleCheckedStatusChange(event) {
         let todoItems = this.state.todoItems.slice();
-        let itemID = parseInt(event.target.closest('.list-item').getAttribute('todo-id'));
+        let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
         todoItems.map(item => {
-            if(item.todoID ===  itemID) {
+            if (item.todoID === itemID) {
                 item.checkedStatus = event.target.checked;
             }
             return true;
         });
-        this.setState({todoItems: todoItems})
+        this.setState({ todoItems: todoItems })
     }
 
-    handleCompletedStatusChange = (event) => {
+    handleCompletedStatusChange(event) {
         let todoItems = this.state.todoItems.slice();
-        let itemID = parseInt(event.target.closest('.list-item').getAttribute('todo-id'));
+        let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
         todoItems.map(item => {
-            if(item.todoID ===  itemID) {
+            if (item.todoID === itemID) {
                 item.completedStatus = !item.completedStatus;
             }
             return true;
         });
-        this.setState({todoItems: todoItems})
+        this.setState({ todoItems: todoItems })
     }
 
     render() {
         return (
-            <div className='todo-manager'>
+            <div className={styles['todo-manager']}>
                 < TodoActionBar
                     textValue={this.state.todoInputTextValue}
                     handleInputTextChange={this.handleInputTextChange}
                     addItem={this.addItem}
+                    selectDeselectAll={this.selectDeselectAll}
                     deleteSelected={this.deleteSelected}
                     deleteCompleted={this.deleteCompleted}
-                    selectDeselectAll={this.selectDeselectAll}
                 />
-                < ListContainer
+                < TodoListContainer
                     todoItems={this.state.todoItems}
-                    deleteItem={this.deleteItem}
                     handleCheckedStatusChange={this.handleCheckedStatusChange}
                     handleCompletedStatusChange={this.handleCompletedStatusChange}
+                    deleteItem={this.deleteItem}
                 />
             </div>
         );
