@@ -11,7 +11,7 @@ TodoActionBar.prototype.constructor = TodoActionBar;
 
 TodoActionBar.prototype.init = function () {
     
-    document.getElementById('btn-add').onclick = onClickAddItem;  //onXyzClick?
+    document.getElementById('btn-add').onclick = onClickAddItem;  //onAddItemClick? //handleAddItemClick?
 
     document.getElementById('btn-select-all').onclick = onClickSelectDeselectAll;
 

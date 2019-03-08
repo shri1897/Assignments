@@ -48,7 +48,7 @@ const deleteCompleted  = function () {
     }
 };
 
-const selectDeselectAll = function () {  //rename? - selectDeselectAll
+const selectDeselectAll = function () {
     var check = true;
     var firstListItem = this.todoItemMap[Object.keys(this.todoItemMap)[0]];
 

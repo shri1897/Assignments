@@ -18,7 +18,7 @@ TodoListItem.prototype.render = function () {  //WRONG? - Render also adds event
     newTodoElement.className = 'todo-wrapper';
     newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
 
-    newTodoElement.onclick = onClickTodoElement.bind(this);
+    newTodoElement.onclick = onClickTodoElement.bind(this); //Click Listener - move to sepeate function?
     return newTodoElement;
 };
 
@@ -32,7 +32,7 @@ TodoListItem.prototype.setStatus = function (status) {
     var todoElement = document.querySelector(`[todo-id='${this.id}']`);
 
     this.status = status;
-    status ? todoElement.classList.add('done') : todoElement.classList.remove('done');
+    status ? todoElement.classList.add('done') : todoElement.classList.remove('done'); 
     // if(status) {
     //     todoElement.classList.add('done');
     // }else {
@@ -46,7 +46,7 @@ TodoListItem.prototype.delete = function () {
     });
 
     broker.dispatchEvent(deleteItemEvent);
-    document.querySelector(`[todo-id='${this.id}']`).closest('.todo-wrapper').remove();       //Split into two lines??
+    document.querySelector(`[todo-id='${this.id}']`).closest('.todo-wrapper').remove();   //Split into two/three lines??
 };
 
 const onClickTodoElement = function (event) {
