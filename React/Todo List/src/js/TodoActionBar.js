@@ -39,17 +39,17 @@ function TodoActionBar(props) {
             <button
                 className={styles['btn-select-deselect-all']}
                 onClick={props.selectDeselectAll}>
-                Select/Deselect All     
+                Select/Deselect All
             </button>
             <button
                 className={styles['btn-delete-selected']}
                 onClick={props.deleteSelected}>
-                Delete Selected         {/* is this a right way to write? */}
+                Delete Selected         {/* is this right? */}
             </button>
             <button
                 className={styles['btn-delete-completed']}
                 onClick={props.deleteCompleted}>
-                {'Delete Completed'}    {/* or is this a better way to write? */}
+                {'Delete Completed'}    {/* or is this a better way? */}
             </button>
         </div>
     );

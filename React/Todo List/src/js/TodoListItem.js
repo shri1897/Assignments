@@ -18,11 +18,12 @@ const defaultProps = {
 }
 
 function TodoListItem(props) {
-    let itemWrapperClassName = [styles['list-item']];
+    let itemWrapperClassName = [styles['list-item']];   //better name?
 
     if (props.completedStatus) {
         itemWrapperClassName.push(styles['completed']);
     }
+
     return (
         <div className={itemWrapperClassName.join(' ')} todo-id={props.todoID}>
             <input

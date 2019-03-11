@@ -5,6 +5,11 @@ import styles from '../css/TodoManager.module.css'
 
 class TodoManager extends React.Component {
 
+    state = {
+        todoItems: [],
+        todoInputTextValue: ''
+    };
+
     constructor(props) {
         super(props);
 
@@ -17,11 +22,6 @@ class TodoManager extends React.Component {
         this.handleCheckedStatusChange = this.handleCheckedStatusChange.bind(this);
         this.handleCompletedStatusChange = this.handleCompletedStatusChange.bind(this);
     }
-    
-    state = {
-        todoItems: [],
-        todoInputTextValue: ''
-    };
 
     addItem() {
         let todoItems = this.state.todoItems.slice();
@@ -31,15 +31,6 @@ class TodoManager extends React.Component {
             todoItems.push({ todoID: todoID, todoText: todoText, checkedStatus: false, completedStatus: false });
             this.setState({ todoItems: todoItems, todoInputTextValue: '' });
         }
-    }
-
-    deleteItem(event) {
-        let todoItems = this.state.todoItems.slice();
-        let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
-        todoItems = todoItems.filter(item => {
-            return item.todoID !== itemID;
-        });
-        this.setState({ todoItems: todoItems })
     }
 
     selectDeselectAll() {
@@ -70,6 +61,15 @@ class TodoManager extends React.Component {
         this.setState({ todoItems: todoItems });
     }
 
+    deleteItem(event) {
+        let todoItems = this.state.todoItems.slice();
+        let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
+        todoItems = todoItems.filter(item => {
+            return item.todoID !== itemID;
+        });
+        this.setState({ todoItems: todoItems })
+    }
+
     handleInputTextChange(event) {
         this.setState({ todoInputTextValue: event.target.value });
     }
@@ -77,7 +77,7 @@ class TodoManager extends React.Component {
     handleCheckedStatusChange(event) {
         let todoItems = this.state.todoItems.slice();
         let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
-        todoItems.map(item => {
+        todoItems.map(item => {  //use binary Search using id??? or linear search with break for future proofing?
             if (item.todoID === itemID) {
                 item.checkedStatus = event.target.checked;
             }
@@ -89,7 +89,7 @@ class TodoManager extends React.Component {
     handleCompletedStatusChange(event) {
         let todoItems = this.state.todoItems.slice();
         let itemID = parseInt(event.target.closest('[todo-id]').getAttribute('todo-id'));
-        todoItems.map(item => {
+        todoItems.map(item => { /*GENERALIZE? */ //use binary Search using id??? or linear search with break for future proofing?
             if (item.todoID === itemID) {
                 item.completedStatus = !item.completedStatus;
             }

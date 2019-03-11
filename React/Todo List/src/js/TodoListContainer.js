@@ -11,9 +11,7 @@ const propTypes = {
 }
 
 function TodoListContainer(props) {
-    let todoItems = props.todoItems;
-
-    let listItems = todoItems.map((item) => {
+    let listItems = props.todoItems.map((item) => {
         return (
             < TodoListItem
                 key={item.todoID}
