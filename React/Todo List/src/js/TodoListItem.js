@@ -5,8 +5,8 @@ import styles from '../css/TodoListItem.module.css'
 const propTypes = {
     todoID: PropTypes.number.isRequired,
     todoText: PropTypes.string.isRequired,
-    checkedStatus: PropTypes.bool.isRequired,
-    completedStatus: PropTypes.bool.isRequired,
+    checkedStatus: PropTypes.bool,
+    completedStatus: PropTypes.bool,
     deleteItem: PropTypes.func.isRequired,
     handleCheckedStatusChange: PropTypes.func.isRequired,
     handleCompletedStatusChange: PropTypes.func.isRequired
@@ -18,32 +18,33 @@ const defaultProps = {
 }
 
 function TodoListItem(props) {
-    let classes = [styles['list-item']];
+    let itemWrapperClassName = [styles['list-item']];
+
     if (props.completedStatus) {
-        classes.push(styles['completed']);
+        itemWrapperClassName.push(styles['completed']);
     }
     return (
-        <div className={classes.join(' ')} todo-id={props.todoID}>
+        <div className={itemWrapperClassName.join(' ')} todo-id={props.todoID}>
             <input
                 type="checkbox"
-                className={styles["check-box"]}
+                className={styles['check-box']}
                 checked={props.checkedStatus}
                 todo-action="select-item"
                 onChange={props.handleCheckedStatusChange}
             />
             <p
-                className={styles["todo-text"]}
+                className={styles['todo-text']}
                 todo-action="todo-text">
                 {props.todoText}
             </p>
             <button
-                className={styles["btn-done"]}
+                className={styles['btn-done']}
                 todo-action="mark-done"
                 onClick={props.handleCompletedStatusChange}>
                 Done
             </button>
             <button
-                className={styles["btn-delete"]}
+                className={styles['btn-delete']}
                 todo-action="delete-item"
                 onClick={props.deleteItem}>
                 Delete

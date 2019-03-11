@@ -17,7 +17,7 @@ class TodoManager extends React.Component {
         this.handleCheckedStatusChange = this.handleCheckedStatusChange.bind(this);
         this.handleCompletedStatusChange = this.handleCompletedStatusChange.bind(this);
     }
-
+    
     state = {
         todoItems: [],
         todoInputTextValue: ''
@@ -27,7 +27,7 @@ class TodoManager extends React.Component {
         let todoItems = this.state.todoItems.slice();
         let todoText = this.state.todoInputTextValue;
         if (todoText) {
-            let todoID = new Date().getTime();
+            let todoID = Date.now();
             todoItems.push({ todoID: todoID, todoText: todoText, checkedStatus: false, completedStatus: false });
             this.setState({ todoItems: todoItems, todoInputTextValue: '' });
         }

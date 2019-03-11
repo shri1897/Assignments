@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import styles from '../css/TodoActionBar.module.css'
 
+const ENTER_KEY = 13;
+
 const propTypes = {
     textValue: PropTypes.string.isRequired,
     handleInputTextChange: PropTypes.func.isRequired,
@@ -12,41 +14,42 @@ const propTypes = {
 }
 
 function TodoActionBar(props) {
+
     function addItemOnEnterKeyPress(event) {
-        if (event.which === 13) {
+        if (event.which === ENTER_KEY) {
             props.addItem();
         }
     }
 
     return (
-        <div className={styles["action-bar"]}>
+        <div className={styles['action-bar']}>
             <input
                 type="text"
-                className={styles["text-box"]}
+                className={styles['text-box']}
                 placeholder="Write something to add"
                 value={props.textValue}
                 onChange={props.handleInputTextChange}
                 onKeyPress={addItemOnEnterKeyPress}
             />
             <button
-                className={styles["btn-add"]}
+                className={styles['btn-add']}
                 onClick={props.addItem}>
                 Add
             </button>
             <button
-                className={styles["btn-select-deselect-all"]}
+                className={styles['btn-select-deselect-all']}
                 onClick={props.selectDeselectAll}>
-                Select/Deselect All
+                Select/Deselect All     
             </button>
             <button
-                className={styles["btn-delete-selected"]}
+                className={styles['btn-delete-selected']}
                 onClick={props.deleteSelected}>
-                Delete Selected
+                Delete Selected         {/* is this a right way to write? */}
             </button>
             <button
-                className={styles["btn-delete-completed"]}
+                className={styles['btn-delete-completed']}
                 onClick={props.deleteCompleted}>
-                Delete Completed
+                {'Delete Completed'}    {/* or is this a better way to write? */}
             </button>
         </div>
     );
@@ -54,4 +57,4 @@ function TodoActionBar(props) {
 
 TodoActionBar.propTypes = propTypes;
 
-export default React.memo(TodoActionBar);
+export default TodoActionBar;  // React.memo(TodoActionBar)? 

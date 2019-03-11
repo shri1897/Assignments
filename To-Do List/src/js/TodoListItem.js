@@ -1,99 +1,74 @@
-import { View } from './View.js';
-import { broker } from './broker.js';
-import { todoItemTemplate } from './todo-item-template.js';
+import View from "./View.js";
+import broker from "./broker.js";
+import todoItemTemplate from "./todo-item-template.js";
 
 function TodoListItem(todoText) {
-    this.id = new Date().getTime();  // ID <---- TimeStamp.
-    this.text = todoText;
-    this.status = false;
-    this.checked = false;
+  this.id = Date.now(); // ID <---- TimeStamp.
+  this.text = todoText;
+  this.status = false;
+  this.checked = false;
 }
 
 TodoListItem.prototype = Object.create(View.prototype);
 
 TodoListItem.prototype.constructor = TodoListItem;
 
-TodoListItem.prototype.render = function () {  //WRONG? - Render also adds event listener.
-    var newTodoElement = document.createElement('div');
-    newTodoElement.className = 'todo-wrapper';
-    newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
+TodoListItem.prototype.render = function () {   //WRONG? - Render also adds event listener.
+  var newTodoElement = document.createElement("div");
+  newTodoElement.className = "todo-wrapper";
+  newTodoElement.innerHTML = Mustache.render(todoItemTemplate, this);
 
-    newTodoElement.onclick = onClickTodoElement.bind(this); //Click Listener - move to sepeate function?
-    return newTodoElement;
+  newTodoElement.onclick = onClickTodoElement.bind(this); //Click Listener - move to sepeate function?
+  return newTodoElement;
 };
 
 TodoListItem.prototype.setChecked = function (check) {
-    var todoElement = document.querySelector(`[todo-id='${this.id}']`);
-    this.checked = check;
-    todoElement.querySelector(`.check-box`).checked = check;
+  var todoElement = document.querySelector(`[todo-id='${this.id}']`);
+  todoElement.querySelector(`.check-box`).checked = check;
+  this.checked = check;
 };
 
 TodoListItem.prototype.setStatus = function (status) {
-    var todoElement = document.querySelector(`[todo-id='${this.id}']`);
-
-    this.status = status;
-    status ? todoElement.classList.add('done') : todoElement.classList.remove('done'); 
-    // if(status) {
-    //     todoElement.classList.add('done');
-    // }else {
-    //     todoElement.classList.remove('done');
-    // }
+  var todoElement = document.querySelector(`[todo-id='${this.id}']`);
+  status ? todoElement.classList.add("done") : todoElement.classList.remove("done");
+  this.status = status;
+  // if(status) {
+  //     todoElement.classList.add('done');
+  // }else {
+  //     todoElement.classList.remove('done');
+  // }
 };
 
 TodoListItem.prototype.delete = function () {
-    var deleteItemEvent = new CustomEvent('TodoManager:deleteMapItem', {
-        detail: { todoID: this.id }
-    });
+  var deleteItemEvent = new CustomEvent("TodoManager:deleteMapItem", {
+    detail: { todoID: this.id }
+  });
 
-    broker.dispatchEvent(deleteItemEvent);
-    document.querySelector(`[todo-id='${this.id}']`).closest('.todo-wrapper').remove();   //Split into two/three lines??
+  broker.dispatchEvent(deleteItemEvent);
+  document.querySelector(`[todo-id='${this.id}']`).closest(".todo-wrapper").remove(); //Split into two/three lines??
 };
 
-const onClickTodoElement = function (event) {
-
-    switch (event.target.getAttribute('todo-action')) {
-        case 'select-item':
-            {
-                this.setChecked(event.target.checked);
-                break;
-            }
-        case 'mark-done':
-            {
-                this.setStatus(!this.status);
-                break;
-            }
-        case 'delete-item':
-            {
-                this.delete();
-                break;
-            }
-    }
+function onClickTodoElement(event) {
+  switch (event.target.getAttribute("todo-action")) {
+    case "select-item":
+      {
+        this.setChecked(event.target.checked);
+        break;
+      }
+    case "mark-done":
+      {
+        this.setStatus(!this.status);
+        break;
+      }
+    case "delete-item":
+      {
+        this.delete();
+        break;
+      }
+  }
 };
 
-export { TodoListItem };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default TodoListItem;
 
 // TodoListItem.prototype.createTodoElement = function () {
 //     var templateListItem = document.querySelector('.template'),

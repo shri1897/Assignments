@@ -1,8 +1,8 @@
-function View() {};
+function View() { };
 
-View.prototype.init = function () {}
-View.prototype.render = function () {}
-View.prototype.delete = function () {}
+View.prototype.init = function () { }
+View.prototype.render = function () { }
+View.prototype.delete = function () { }
 
 
-export {View};
+export default View;
